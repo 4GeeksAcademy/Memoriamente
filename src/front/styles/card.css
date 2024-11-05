@@ -1,0 +1,59 @@
+/* Estilos principales para el contenedor de la carta */
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+/* Título del puntaje */
+h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Tablero de cartas */
+.card ul {
+    display: grid;
+    grid-template-columns: repeat(3, 150px); /* 3 columnas */
+    gap: 20px; /* Espacio entre las cartas */
+    padding: 0;
+    list-style-type: none;
+}
+
+.card ul li {
+    list-style-type: none;
+}
+
+/* Contenedor de cada carta con efecto 3D */
+.content {
+    width: 150px;
+    height: 150px;
+    perspective: 1000px; /* Perspectiva para el efecto de volteo */
+    cursor: pointer;
+    position: relative;
+    margin: 10px; /* Espacio adicional alrededor de cada carta */
+}
+
+/* Estilos para los lados de la carta */
+.front, .back {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    transition: transform 0.6s; /* Suaviza la animación de volteo */
+}
+
+
+
+.front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
