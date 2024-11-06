@@ -57,3 +57,25 @@ h2 {
     object-fit: cover;
     border-radius: 10px;
 }
+
+.back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Rotacion de las Cartas */
+
+.front {
+    transform: perspective(200px) rotateY(0deg);
+  }
+  .back {
+    transform: perspective(200px) rotateY(180deg);
+  }
+  .flip-front {
+    transform: perspective(200px) rotateY(180deg);
+  }
+  .flip-back {
+    transform: perspective(200px) rotateY(0deg);
+  }

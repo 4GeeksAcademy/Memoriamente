@@ -1,10 +1,16 @@
-import { getImages } from "../pages/getImages"; // Asegúrate de ajustar la ruta según corresponda
+import imagen1 from "../../img/1.png";
+import imagen2 from "../../img/2.png";
+import imagen3 from "../../img/3.png";
+import imagen4 from "../../img/4.png";
+import imagen5 from "../../img/5.png";
+import imagen6 from "../../img/6.png";
+
 
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
             message: null,
-            images: [], // Añade una propiedad para almacenar las imágenes en el store
+            images: [], // Almacenará las imágenes generadas
             demo: [
                 {
                     title: "FIRST",
@@ -24,15 +30,15 @@ const getState = ({ getStore, getActions, setStore }) => {
             ],
         },
         actions: {
-            // Utilice getActions para llamar a una función dentro de una función
+            // Función de ejemplo
             exampleFunction: () => {
                 getActions().changeColor(0, "green");
             },
 
+            // Obtener mensaje de ejemplo
             getMessage: async () => {
                 try {
-                    // obteniendo datos del backend
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+                    const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
                     const data = await resp.json();
                     setStore({ message: data.message });
                     return data;
@@ -41,27 +47,59 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
+            // Cambiar color
             changeColor: (index, color) => {
-                // Obtén el store
                 const store = getStore();
-
-                // Actualiza el array de demo para cambiar el color de fondo en el índice correspondiente
                 const demo = store.demo.map((elm, i) => {
                     if (i === index) elm.background = color;
                     return elm;
                 });
-
-                // Actualiza el store global
                 setStore({ demo: demo });
             },
 
-            // Nueva acción para obtener imágenes
-            fetchImages: (size) => {
-                const images = getImages(size); // Llama a la función getImages con el tamaño deseado
-                setStore({ images: images }); // Guarda las imágenes en el store
+            // Nueva función para obtener imágenes
+            fetchImages: async (size) => {
+                // Definir las imágenes
+				const images = [
+                    imagen1,
+                    imagen2,
+                    imagen3,
+                    imagen4,
+                    imagen5,
+                    imagen6
+                ];
+
+
+                
+
+                // Obtener solo las primeras `size` imágenes, duplicarlas y mezclarlas aleatoriamente
+                const selectedImages = images.slice(0, size);
+                const shuffledImages = selectedImages
+                    .flatMap((item) => [`1|${item}`, `2|${item}`])
+                    .sort(() => Math.random() - 0.5);
+
+
+					// EJEMPLO PARA CUANDO LLAME A LA API
+
+					// fetchImages: async (size) => {
+					// 	try {
+					// 		// Imaginemos que tienes una API que devuelve URLs de imágenes
+					// 		const response = await fetch("https://api.ejemplo.com/imagenes"); // URL ficticia
+					// 		const data = await response.json();
+				
+					// 		// Supongamos que 'data' contiene un array de URLs de imágenes
+					// 		const images = data.slice(0, size);
+					// 		const shuffledImages = images
+					// 			.flatMap((item) => [item, item]) // Duplica cada imagen
+					// 			.sort(() => Math.random() - 0.5); // Mezcla aleatoriamente las imágenes
+				
+
+                // Guardar las imágenes en el store
+                setStore({ images: shuffledImages });
             }
         }
     };
 };
 
 export default getState;
+
