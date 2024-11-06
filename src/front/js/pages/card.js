@@ -9,11 +9,7 @@ export const Card = () => {
     
     // Estado cantidad de cartas en el tablero
     const [size, setSize] = useState(3); 
-
-    // Estado para seleccionar las cartas
     const [selected, setSelected] = useState([]); 
-    
-    // Estado para las cartas ya acertadas y abiertas
     const [opened, setOpened] = useState([]); 
 
     // useEffect para inicializar el nivel del juego
@@ -25,6 +21,7 @@ export const Card = () => {
     const handleClick = (item) => {
         if (selected.length < 2) { 
             setSelected((prevSelected) => [...prevSelected, item]); // Agrega la carta clicada al estado `selected`
+            actions.setClicks(store.clicks + 1); // Aumenta el contador de clics para el score
         }
     };
 
@@ -40,21 +37,21 @@ export const Card = () => {
         }
     }, [selected]); 
 
-    // useEffect para aumentar el nivel si todas las cartas han sido acertadas
     useEffect(() => {
-        if (opened.length === store.images.length) { // Comprueba si todas las cartas están abiertas
-            setSize((prevSize) => prevSize + 1); // Incrementa el tamaño del juego
+        if (opened.length === store.images.length) {
+            actions.calculateScore(); // Calcula el puntaje después de completar el nivel
             setOpened([]); // Reinicia las cartas abiertas
-            actions.fetchImages(size + 1); // Llama a `fetchImages` para recargar imágenes con el nuevo tamaño
+            actions.fetchImages(store.size + 1); // Pasa al siguiente nivel
         }
-    }, [opened, store.images.length, actions, size]); // Activa este efecto cuando `opened` cambia
+    }, [opened, store.images.length, actions]);
+
 
     // Variable de control para verificar si la carta debe mostrarse volteada
     let include = false;
 
     return (
         <div className="container text-center my-4">
-            <h2 className="score mb-4">Score: 100</h2> 
+            <h2 className="score mb-4">Score: {store.score.current}</h2> 
             
             {/* Contenedor de cartas */}
 
