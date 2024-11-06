@@ -43,7 +43,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     setStore({ message: data.message });
                     return data;
                 } catch (error) {
-                    console.log("Error loading message from backend", error);
+                   // console.log("Error loading message from backend", error);
                 }
             },
 
