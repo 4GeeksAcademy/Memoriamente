@@ -10,15 +10,20 @@ const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
             message: null,
-            images: [],               
-            score: { current: 0 },
-            clicks: 0,
-            size: 3,
-            time: 0,                 //tiempo transcurrido en segundos
-            timerInterval: null,     // Para controlar el temporizador
-            timerRunning: false, // Control para saber si el temporizador está corriendo
-        },
+            images: [], // Almacenará las imágenes generadas
+            score: { current: 0 }, // Puntaje actual
+            clicks: 0,              // Contador de clics realizados
+            size: 3,                // Nivel inicial
+            time: 0,                // Tiempo transcurrido en segundos
+            timerInterval: null,    // Para controlar el temporizador
+            timerRunning: false, // Nuevo: Controla si el temporizador está en marcha
 
+            demo: [
+                { title: "FIRST", background: "white", initial: "white" },
+                { title: "SECOND", background: "white", initial: "white" },
+                { title: "THIRD", background: "white", initial: "white" }
+            ],
+        },
         actions: {
             exampleFunction: () => {
                 getActions().changeColor(0, "green");
@@ -34,54 +39,39 @@ const getState = ({ getStore, getActions, setStore }) => {
                 } catch (error) {
                    // console.log("Error loading message from backend", error);
                 }
-            },
+            },    
 
-                          
-            // Iniciar el temporizador
+
+                 // Iniciar el temporizador
             startTimer: () => {
-                const store = getStore();
-                
-                if (!store.timerRunning) { // Solo inicia el temporizador si no está corriendo
+                const { timerInterval, timerRunning } = getStore();
+
+                if (!timerRunning) {
                     const interval = setInterval(() => {
-                        const updatedStore = getStore();
-                        setStore({ 
-                            ...updatedStore, 
-                            time: updatedStore.time + 1 
-                        });
-                    }, 1000);
-                    setStore({ timerInterval: interval, timerRunning: true });
+                        setStore((prevStore) => ({
+                            ...prevStore,
+                            time: prevStore.time + 1,
+                            timerRunning: true,
+                        }));
+                    }, 1000); // Actualizamos cada segundo
+                    setStore({ timerInterval: interval });
                 }
             },
 
             // Detener el temporizador
             stopTimer: () => {
-                const store = getStore();
-                if (store.timerInterval) {
-                    clearInterval(store.timerInterval);
+                const { timerInterval } = getStore();
+                if (timerInterval) {
+                    clearInterval(timerInterval);
                     setStore({ timerInterval: null, timerRunning: false });
                 }
             },
 
-            // Reiniciar el temporizador
+            // Reiniciar el tiempo a cero
             resetTimer: () => {
-                const store = getStore();
-                if (store.timerInterval) {
-                    clearInterval(store.timerInterval);
-                }
-                setStore({ time: 0, timerInterval: null, timerRunning: false });
+                setStore({ time: 0, timerRunning: false });
             },
 
-            // fetchImages: async (size) => {
-					// 	try {
-					// 		// Imaginemos que tienes una API que devuelve URLs de imágenes
-					// 		const response = await fetch("https://api.ejemplo.com/imagenes"); // URL ficticia
-					// 		const data = await response.json();
-				
-					// 		// Supongamos que 'data' contiene un array de URLs de imágenes
-					// 		const images = data.slice(0, size);
-					// 		const shuffledImages = images
-					// 			.flatMap((item) => [item, item]) // Duplica cada imagen
-					// 			.sort(() => Math.random() - 0.5); // Mezcla aleatoriamente las imágenes
 
 
 
