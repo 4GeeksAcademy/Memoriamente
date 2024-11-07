@@ -8,23 +8,25 @@ import imagen7 from "../../img/7.png";
 
 const getState = ({ getStore, getActions, setStore }) => {
     return {
+       
         store: {
             message: null,
-            images: [],               
-            score: { current: 0 },
-            clicks: 0,
-            size: 3,
-            time: 0,                 //tiempo transcurrido en segundos
-            timerInterval: null,     // Para controlar el temporizador
-            timerRunning: false, // Control para saber si el temporizador está corriendo
+            images: [],              // Arreglo que contiene las imágenes cargadas en el juego
+            score: { current: 0 },   // Puntaje del jugador
+            clicks: 0,               // Cantidad de clics realizados
+            size: 3,                 // Tamaño del nivel actual (cantidad de pares de cartas)
+            time: 0,                 // Tiempo transcurrido en segundos
+            timerInterval: null,     // Intervalo para manejar el temporizador
+            timerRunning: false,     // Estado del temporizador (si está corriendo o detenido)
         },
 
         actions: {
+            // Ejemplo de función para cambiar un color
             exampleFunction: () => {
                 getActions().changeColor(0, "green");
             },
 
-            // Obtener mensaje de ejemplo
+            // Ejemplo de función para obtener un mensaje del backend
             getMessage: async () => {
                 try {
                     const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
@@ -36,24 +38,22 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-                          
-            // Iniciar el temporizador
+            // Inicia el temporizador
             startTimer: () => {
                 const store = getStore();
-                
-                if (!store.timerRunning) { // Solo inicia el temporizador si no está corriendo
+                if (!store.timerRunning) { // Solo inicia si no está corriendo
                     const interval = setInterval(() => {
                         const updatedStore = getStore();
                         setStore({ 
                             ...updatedStore, 
-                            time: updatedStore.time + 1 
+                            time: updatedStore.time + 1 // Incrementa el tiempo cada segundo
                         });
                     }, 1000);
                     setStore({ timerInterval: interval, timerRunning: true });
                 }
             },
 
-            // Detener el temporizador
+            // Detiene el temporizador
             stopTimer: () => {
                 const store = getStore();
                 if (store.timerInterval) {
@@ -62,7 +62,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            // Reiniciar el temporizador
+            // Reinicia el temporizador 
             resetTimer: () => {
                 const store = getStore();
                 if (store.timerInterval) {
@@ -70,6 +70,17 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
                 setStore({ time: 0, timerInterval: null, timerRunning: false });
             },
+
+            // Carga imágenes y las baraja
+            fetchImages: async (size) => {
+                const images = [imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7];
+                const selectedImages = images.slice(0, size);
+                const shuffledImages = selectedImages
+                    .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
+                    .sort(() => Math.random() - 0.5); // Mezcla las imágenes
+                setStore({ images: shuffledImages, size: size, clicks: 0 }); // Reinicia los clics al cargar nuevas imágenes
+            },
+
 
             // fetchImages: async (size) => {
 					// 	try {
@@ -84,24 +95,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// 			.sort(() => Math.random() - 0.5); // Mezcla aleatoriamente las imágenes
 
 
-
-            // Nueva función para obtener imágenes
-            fetchImages: async (size) => {
-                const images = [imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7];
-                const selectedImages = images.slice(0, size);
-                const shuffledImages = selectedImages
-                    .flatMap((item) => [`1|${item}`, `2|${item}`])
-                    .sort(() => Math.random() - 0.5);
-                
-                setStore({ images: shuffledImages, size: size, clicks: 0 }); // Reinicia `clicks` al cargar nuevas imágenes
-            },
-
-            // Función para calcular el puntaje
+            // Calcula el puntaje en función del nivel y la cantidad de clics
             calculateScore: () => {
                 const store = getStore();
                 const passLevel = store.size * 10;
                 let total = store.score.current;
                 const cards = store.size * 2;
+
                 
                 if (store.clicks === cards) {
                     total += (cards * 2) + passLevel;
@@ -113,12 +113,12 @@ const getState = ({ getStore, getActions, setStore }) => {
                     total += Math.round(cards / 3) + passLevel;
                 }
                 
-                setStore({ clicks: 0, score: { current: total }, time:0 });
+                setStore({ clicks: 0, score: { current: total }, time: 0 }); // Resetea clics y tiempo
             },
 
-            // Función para actualizar la cantidad de clics
+            // Actualiza la cantidad de clics
             setClicks: (newClicks) => {
-                setStore({ clicks: newClicks });   
+                setStore({ clicks: newClicks });
             }
         }
     };
