@@ -14,7 +14,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             images: [],              // Arreglo que contiene las imágenes cargadas en el juego
             score: { current: 0 },   // Puntaje del jugador
             clicks: 0,               // Cantidad de clics realizados
-            size: 3,                 // Tamaño del nivel actual (cantidad de pares de cartas)
+            size: 1,                 // Tamaño del nivel actual (cantidad de pares de cartas)
             time: 0,                 // Tiempo transcurrido en segundos
             timerInterval: null,     // Intervalo para manejar el temporizador
             timerRunning: false,     // Estado del temporizador (si está corriendo o detenido)
@@ -53,6 +53,14 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
+            pauseTimer: () => {
+                const store = getStore();
+                if (store.timerRunning && store.timerInterval) {
+                    clearInterval(store.timerInterval);
+                    setStore({ timerRunning: false, timerInterval: null });
+                }
+            },
+
             // Detiene el temporizador
             stopTimer: () => {
                 const store = getStore();
@@ -62,6 +70,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
+            
             // Reinicia el temporizador 
             resetTimer: () => {
                 const store = getStore();
@@ -69,6 +78,30 @@ const getState = ({ getStore, getActions, setStore }) => {
                     clearInterval(store.timerInterval);
                 }
                 setStore({ time: 0, timerInterval: null, timerRunning: false });
+            },
+
+             // Función para reiniciar el juego
+             resetGame: () => {
+                const store = getStore();
+                
+                // Detiene el temporizador si está corriendo
+                if (store.timerInterval) {
+                    clearInterval(store.timerInterval);
+                }
+
+                // Restablece el juego a su estado inicial
+                setStore({
+                    images: [],
+                    score: { current: 0 },
+                    clicks: 0,
+                    size: 1, // Nivel inicial
+                    time: 0,
+                    timerInterval: null,
+                    timerRunning: false,
+                });
+
+                // Recarga las imágenes para el primer nivel
+                getActions().fetchImages(1);
             },
 
             // Carga imágenes y las baraja

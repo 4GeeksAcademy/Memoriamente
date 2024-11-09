@@ -8,7 +8,7 @@ export const Card = () => {
     const { store, actions } = useContext(Context);
 
     // Estado local del componente:
-    const [size, setSize] = useState(3);       
+    const [size, setSize] = useState(1);       
     const [selected, setSelected] = useState([]); 
     const [opened, setOpened] = useState([]);  
 
@@ -55,19 +55,45 @@ export const Card = () => {
         actions.startTimer();
     };
 
+    // Pausa el temporizador cuando el usuario presiona el botón
+    const handlePauseTimer = () => {
+        actions.pauseTimer();
+    };
+
+    // Reinicia el Juego
+    const handleResetGame = () => {
+        actions.resetGame(); // Llama a la función para reiniciar el juego
+        setSize(1); // Restablece el nivel localmente
+        setSelected([]); // Reinicia las cartas seleccionadas
+        setOpened([]); // Reinicia las cartas abiertas
+    };
+
+
+
     let include = false;
 
     return (
         <div className="container text-center my-4">
             <h2 className="score mb-4">Score: {store.score.current}</h2> {/* Muestra el puntaje actual */}
             <h2 className="time mb-4">Tiempo: {store.time} segundos</h2> {/* Muestra el tiempo transcurrido */}
+            <h2 className="level mb-4">Level: {size}</h2> {/* Muestra el nivel actual */}
+            
 
             {/* Botón para iniciar el temporizador si no está corriendo */}
-            {!store.timerRunning && (
+            {!store.timerRunning ? (
                 <button onClick={handleStartTimer} className="btn btn-primary mb-3">
                     Iniciar Tiempo
                 </button>
+            ) : (
+                <button onClick={handlePauseTimer} className="btn btn-warning mb-3">
+                    Pausar Tiempo
+                </button>
             )}
+
+            {/* Botón para reiniciar el juego */}
+            <button onClick={handleResetGame} className="btn btn-danger mb-3 ms-2">
+                Reiniciar Juego
+            </button>
 
             
             <div className="row justify-content-center">
