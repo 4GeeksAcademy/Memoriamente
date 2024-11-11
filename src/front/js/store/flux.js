@@ -8,7 +8,7 @@ import imagen7 from "../../img/7.png";
 
 const getState = ({ getStore, getActions, setStore }) => {
     return {
-       
+
         store: {
             message: null,
             images: [],              // Arreglo que contiene las imágenes cargadas en el juego
@@ -28,14 +28,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             // Ejemplo de función para obtener un mensaje del backend
             getMessage: async () => {
-                try {
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
-                    const data = await resp.json();
-                    setStore({ message: data.message });
-                    return data;
-                } catch (error) {
-                   // console.log("Error loading message from backend", error);
-                }
+                // try {
+                //     const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
+                //     const data = await resp.json();
+                //     setStore({ message: data.message });
+                //     return data;
+                // } catch (error) {
+                //    // console.log("Error loading message from backend", error);
+                // }
             },
 
             // Inicia el temporizador
@@ -44,8 +44,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                 if (!store.timerRunning) { // Solo inicia si no está corriendo
                     const interval = setInterval(() => {
                         const updatedStore = getStore();
-                        setStore({ 
-                            ...updatedStore, 
+                        setStore({
+                            ...updatedStore,
                             time: updatedStore.time + 1 // Incrementa el tiempo cada segundo
                         });
                     }, 1000);
@@ -70,7 +70,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            
+
             // Reinicia el temporizador 
             resetTimer: () => {
                 const store = getStore();
@@ -80,10 +80,10 @@ const getState = ({ getStore, getActions, setStore }) => {
                 setStore({ time: 0, timerInterval: null, timerRunning: false });
             },
 
-             // Función para reiniciar el juego
-             resetGame: () => {
+            // Función para reiniciar el juego
+            resetGame: () => {
                 const store = getStore();
-                
+
                 // Detiene el temporizador si está corriendo
                 if (store.timerInterval) {
                     clearInterval(store.timerInterval);
@@ -104,7 +104,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 getActions().fetchImages(1);
             },
 
-            // Carga imágenes y las baraja
+            //Carga imágenes y las baraja
             fetchImages: async (size) => {
                 const images = [imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7];
                 const selectedImages = images.slice(0, size);
@@ -116,16 +116,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
             // fetchImages: async (size) => {
-					// 	try {
-					// 		// Imaginemos que tienes una API que devuelve URLs de imágenes
-					// 		const response = await fetch("https://api.ejemplo.com/imagenes"); // URL ficticia
-					// 		const data = await response.json();
-				
-					// 		// Supongamos que 'data' contiene un array de URLs de imágenes
-					// 		const images = data.slice(0, size);
-					// 		const shuffledImages = images
-					// 			.flatMap((item) => [item, item]) // Duplica cada imagen
-					// 			.sort(() => Math.random() - 0.5); // Mezcla aleatoriamente las imágenes
+            //     try {
+            //         //const accessKey = "TU_ACCESS_KEY"; // Reemplaza con tu clave de Unsplash
+            //         const response = await fetch(`https://rickandmortyapi.com/api/character`);
+            //         const data = await response.json();
+
+            //         // Asegúrate de que la URL de las imágenes esté en `data.results`
+            //         const images = await data.results.slice(0, 20).map((item) => item.image); // Obtén solo las primeras 20 imágenes
+
+            //         // Duplica y mezcla aleatoriamente las imágenes
+            //         const shuffledImages = await images
+            //             .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen con identificadores
+            //             .sort(() => Math.random() - 0.5); // Mezcla las imágenes
+
+            //         setStore({ images: shuffledImages, size: size, clicks: 0 });
+
+            //         return data;
+            //     } catch (error) {
+            //         console.error("Error al cargar las imágenes desde la API:", error);
+            //     }
+            // },
 
 
             // Calcula el puntaje en función del nivel y la cantidad de clics
@@ -135,7 +145,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 let total = store.score.current;
                 const cards = store.size * 2;
 
-                
+
                 if (store.clicks === cards) {
                     total += (cards * 2) + passLevel;
                 } else if (store.clicks > cards && store.clicks < cards + 5) {
@@ -145,7 +155,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 } else {
                     total += Math.round(cards / 3) + passLevel;
                 }
-                
+
                 setStore({ clicks: 0, score: { current: total }, time: 0 }); // Resetea clics y tiempo
             },
 
