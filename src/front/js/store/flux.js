@@ -18,6 +18,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             time: 0,                 // Tiempo transcurrido en segundos
             timerInterval: null,     // Intervalo para manejar el temporizador
             timerRunning: false,     // Estado del temporizador (si está corriendo o detenido)
+
+            auth: false
         },
 
         actions: {
@@ -162,7 +164,89 @@ const getState = ({ getStore, getActions, setStore }) => {
             // Actualiza la cantidad de clics
             setClicks: (newClicks) => {
                 setStore({ clicks: newClicks });
-            }
+            },
+
+
+            // DESDE AQUI COMIENZA EL BACKEND
+
+            signup: async (email, password) => {
+
+				const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/signup', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						email: email,
+						password: password,
+						is_active: true
+					})
+				});
+
+				if (!response.ok) {
+					const errorData = await response.json();
+					throw new Error(errorData.msg || 'Error en el signup');
+				}
+
+				const data = await response.json();
+				console.log('Signup exitoso:', data);
+				alert('Registro exitoso!')
+
+			},
+
+            login: async (email, password) => {
+
+				const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/login', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						email: email,
+						password: password
+					})
+				});
+
+				if (!response.ok) {
+					const errorData = await response.json();
+					throw new Error(errorData.msg || 'Error en el login');
+				}
+
+				const data = await response.json();
+				localStorage.setItem("token", data.access_token)
+				console.log('Login exitoso:', data);
+
+			},
+
+            autentificar: async () => {
+				const token = localStorage.getItem("token");
+			
+				if (!token) {
+					return false; // No token found
+				}
+			
+				try {
+					const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/demo', {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`
+						}
+					});
+			
+					if (!response.ok) {
+						localStorage.removeItem("token");
+						return false; // Invalid token
+					}
+			
+					return true; // Token is valid
+				} catch (error) {
+					console.error("Error verifying token:", error);
+					localStorage.removeItem("token");
+					return false; // Error during verification
+				}
+			},
+
+
+
+
+
         }
     };
 };

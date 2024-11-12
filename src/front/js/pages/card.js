@@ -4,7 +4,8 @@ import "../../styles/card.css";
 import questions from "../../img/questions-mark.png";
 
 export const Card = () => {
-   
+
+       
     const { store, actions } = useContext(Context);
 
     // Estado local del componente:
