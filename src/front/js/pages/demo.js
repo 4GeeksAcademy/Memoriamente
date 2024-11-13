@@ -9,16 +9,7 @@ export const Demo = () => {
 	const { store, actions } = useContext(Context);
 	const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const checkAuth = async () => {
-    //         const isAuthenticated = await actions.autentificar();
-    //         if (!isAuthenticated) {
-    //             navigate("/"); // Redirigir si el token es inválido o no existe
-    //         }
-    //     };
-
-    //     checkAuth();
-    // }, [actions, navigate]);
+   
 
 	return (
 		<div className="container text-center my-5">

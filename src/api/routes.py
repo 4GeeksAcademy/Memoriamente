@@ -26,6 +26,8 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+
 @api.route("/login", methods=["POST"])
 def login():
     
@@ -35,14 +37,12 @@ def login():
     user = User.query.filter_by(email=email).first()
     print(user)
 
-    if user == None:
-        return jsonify({"msg": "No se pudo encontrar email"}), 401
-    
-    if email != user.email or password != user.password :
-        return jsonify({"msg": "email o password incorrecto"}), 401
+    #1
+    if not user or user.password != password:
+        return jsonify({"msg": "Email o password incorrecto"}), 401
 
-    access_token = create_access_token(identity=email)
-    return jsonify(access_token=access_token)
+    access_token = create_access_token(identity=user.id)  # Cambiar a user.id para mayor seguridad
+    return jsonify(access_token=access_token, msg="Login exitoso"), 200
 
 @api.route("/signup", methods=["POST"])
 def signup():
