@@ -69,8 +69,6 @@ export const Card = () => {
         setOpened([]); // Reinicia las cartas abiertas
     };
 
-
-
     let include = false;
 
     return (
@@ -92,7 +90,7 @@ export const Card = () => {
             )}
 
             {/* Botón para reiniciar el juego */}
-            <button onClick={handleResetGame} className="btn btn-danger mb-3 ms-2">
+            <button onClick={handleResetGame} className=" button-rick-morty btn btn-danger mb-3 ms-2">
                 Reiniciar Juego
             </button>
 

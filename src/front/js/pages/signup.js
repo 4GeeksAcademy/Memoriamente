@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [email, setEmail] = useState("")
+    const [name, setName] = useState("")
+    const [lastname, setLastname] = useState("")
+    const [seudonimo, setSeudonimo] = useState("")
     const [password, setPassword] = useState("")
 
     const { actions, store } = useContext(Context)
@@ -15,8 +18,11 @@ const Signup = () => {
         e.preventDefault();  // Prevenir que el formulario recargue la página
 
         try {
-            await actions.signup(email, password);
+            await actions.signup(name, lastname, seudonimo, email, password);
             console.log("Has pasado correctamente el registro");
+            setName("");
+            setLastname("");
+            setSeudonimo("");
             setEmail(""); // Limpiar el campo de email
             setPassword(""); // Limpiar el campo de password
             navigate("/login");
@@ -26,15 +32,57 @@ const Signup = () => {
         }
     };
 
-
-
-
     return (
         <div className="d-flex justify-content-center mt-5">
 
 
             <form onSubmit={handleSubmit} className="p-4 bg-dark text-white rounded">
                 <h1 className="titulo ms-3">Registro</h1>
+
+
+                 {/* Campo de nombre */}
+
+                 <div className="mb-3">
+                    <label for="Name" class="form-label">Nombre</label>
+                    <input type="Nombre"
+                        onChange={(e) => setName(e.target.value)}
+                        value={name} placeholder="Nombre"
+                        autoComplete=""
+                        // el REQUIRED es para asegurarte de que el usuario no pueda enviar el formulario sin completar los campo.
+                        required
+                        className="form-control"
+                        aria-describedby="nameHelp" />  
+                </div>
+
+
+
+                 {/* Campo de apellido */}
+
+                 <div className="mb-3">
+                    <label for="lastname" class="form-label">Apellido</label>
+                    <input type="Apellido"
+                        onChange={(e) => setLastname(e.target.value)}
+                        value={lastname} placeholder="Apellido"
+                        autoComplete=""
+                        // el REQUIRED es para asegurarte de que el usuario no pueda enviar el formulario sin completar los campo.
+                        required
+                        className="form-control"
+                        aria-describedby="lastnameHelp" />
+                </div>
+
+                {/* Campo de seudonimo */}
+
+                <div className="mb-3">
+                    <label for="seudonimo" class="form-label">Seudonimo</label>
+                    <input type="Seudonimo"
+                        onChange={(e) => setSeudonimo(e.target.value)}
+                        value={seudonimo} placeholder="Seudonimo"
+                        autoComplete=""
+                        // el REQUIRED es para asegurarte de que el usuario no pueda enviar el formulario sin completar los campo.
+                        required
+                        className="form-control"
+                        aria-describedby="lastnameHelp" />
+                </div>
 
                  {/* Campo de email */}
 
@@ -43,7 +91,7 @@ const Signup = () => {
                     <input type="email"
                         onChange={(e) => setEmail(e.target.value)}
                         value={email} placeholder="name@example.com"
-                        autoComplete="new-email"
+                        autoComplete="new-email" 
                         // el REQUIRED es para asegurarte de que el usuario no pueda enviar el formulario sin completar los campo.
                         required
                         className="form-control"

@@ -5,6 +5,7 @@
     padding-top: 100%; /* Proporción cuadrada */
     cursor: pointer;
     perspective: 1500px;
+    
 }
 
 .content {
@@ -85,3 +86,9 @@
   .flip-back {
     transform: perspective(200px) rotateY(0deg);
   }
+
+  .button-rick-morty{
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 235, 59, 0.7);
+    background-color: #ffeb3b; /* cambia a amarillo al pasar el ratón */
+}

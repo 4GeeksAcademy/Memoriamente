@@ -14,3 +14,14 @@
     margin: auto;
    
 }
+
+.button {
+    background-color: #39FF14; /* verde fosforescente */
+    color: #2c2c54;
+    border: 2px solid #ffeb3b; /* amarillo brillante */
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-family: 'Luckiest Guy', cursive;
+    transition: transform 0.3s, box-shadow 0.3s;
+}

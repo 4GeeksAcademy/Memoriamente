@@ -169,12 +169,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             // DESDE AQUI COMIENZA EL BACKEND
 
-            signup: async (email, password) => {
+            signup: async (name, lastname, seudonimo, email, password) => {
 
 				const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/signup', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
+                        name: name,
+                        lastname: lastname,
+                        seudonimo: seudonimo,
 						email: email,
 						password: password,
 						is_active: true

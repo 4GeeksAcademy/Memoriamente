@@ -54,7 +54,7 @@ def signup():
     print(user)
     if user == None:
         #Si no ha sido creado esto crea el usuario
-        user = User(email=body["email"], password=body["password"], is_active=True)
+        user = User(name=body["name"], lastname=body["lastname"], seudonimo=body["seudonimo"], email=body["email"], password=body["password"], is_active=True)
         db.session.add(user)
         db.session.commit()
         response_body = {
