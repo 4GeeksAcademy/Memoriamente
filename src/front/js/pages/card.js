@@ -9,15 +9,15 @@ export const Card = () => {
     const { store, actions } = useContext(Context);
 
     // Estado local del componente:
-    const [size, setSize] = useState(1);       
+   // const [size, setSize] = useState(1);       
     const [selected, setSelected] = useState([]); 
     const [opened, setOpened] = useState([]);  
 
     // useEffect que se ejecuta al inicio y cada vez que cambia el tamaño del nivel
     useEffect(() => {
-        actions.fetchImages(size); // Carga nuevas imágenes según el tamaño de nivel
+        actions.fetchImages(); // Carga nuevas imágenes según el tamaño de nivel
         actions.resetTimer(); // Reinicia el temporizador al iniciar el nivel
-    }, [size]);
+    }, []);
 
     // Manejador de eventos para el clic en una carta
     const handleClick = (item) => {
@@ -44,12 +44,13 @@ export const Card = () => {
         if (opened.length === store.images.length) { // Compara cartas abiertas con el total de cartas
             actions.stopTimer(); // Detiene el temporizador
             actions.calculateScore(); // Calcula el puntaje
-            setSize((prevSize) => prevSize + 1); // Incrementa el nivel (aumenta el tamaño del juego)
+            //setSize((prevSize) => prevSize + 1); // Incrementa el nivel (aumenta el tamaño del juego)
             setOpened([]); // Resetea las cartas abiertas
-            actions.fetchImages(size + 1); // Carga nuevas imágenes para el siguiente nivel
+            actions.fetchImages(); // Carga nuevas imágenes para el siguiente nivel
             actions.resetTimer(); // Reinicia el temporizador para el nuevo nivel
+            setStore({ level: store.level + 1 }); // Incrementa el nivel
         }
-    }, [opened, store.images.length, actions, size]);
+    }, [opened, store.images.length, actions]);
 
     // Inicia el temporizador cuando el usuario presiona el botón
     const handleStartTimer = () => {
@@ -64,18 +65,20 @@ export const Card = () => {
     // Reinicia el Juego
     const handleResetGame = () => {
         actions.resetGame(); // Llama a la función para reiniciar el juego
-        setSize(1); // Restablece el nivel localmente
+       // setSize(1); // Restablece el nivel localmente
         setSelected([]); // Reinicia las cartas seleccionadas
         setOpened([]); // Reinicia las cartas abiertas
     };
 
     let include = false;
 
+    
+
     return (
         <div className="container text-center my-4">
             <h2 className="score mb-4">Score: {store.score.current}</h2> {/* Muestra el puntaje actual */}
             <h2 className="time mb-4">Tiempo: {store.time} segundos</h2> {/* Muestra el tiempo transcurrido */}
-            <h2 className="level mb-4">Level: {size}</h2> {/* Muestra el nivel actual */}
+            <h2 className="level mb-4">Level: {store.level} </h2> {/* Muestra el nivel actual */}
             
 
             {/* Botón para iniciar el temporizador si no está corriendo */}

@@ -73,7 +73,7 @@ const Signup = () => {
                 {/* Campo de seudonimo */}
 
                 <div className="mb-3">
-                    <label for="seudonimo" class="form-label">Seudonimo</label>
+                    <label htmlFor="seudonimo" class="form-label">Seudonimo</label>
                     <input type="Seudonimo"
                         onChange={(e) => setSeudonimo(e.target.value)}
                         value={seudonimo} placeholder="Seudonimo"
@@ -87,7 +87,7 @@ const Signup = () => {
                  {/* Campo de email */}
 
                 <div className="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <label htmlFor="exampleInputEmail1" class="form-label">Email address</label>
                     <input type="email"
                         onChange={(e) => setEmail(e.target.value)}
                         value={email} placeholder="name@example.com"
@@ -101,7 +101,7 @@ const Signup = () => {
                  {/* Campo de contraseña */}
 
                 <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <label htmlFor="exampleInputPassword1" class="form-label">Password</label>
                     <input type="password" 
                     onChange={(e) => setPassword(e.target.value)} 
                     value={password} placeholder="password" 

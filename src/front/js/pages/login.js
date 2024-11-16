@@ -37,8 +37,8 @@ const Login = () => {
                 <h1 className="titulo">Login</h1>
 
                 {/* Campo de email */}
-                <div class="mb-3">
-                    <label for="Email" className="form-label">Email address</label>
+                <div className="mb-3">
+                    <label htmlFor="Email" className="form-label">Email address</label>
                     <input
                         type="email"
                         onChange={(e) => setEmail(e.target.value)}
@@ -53,8 +53,8 @@ const Login = () => {
                 </div>
 
                 {/* Campo de contraseña */}
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" className="form-label">Password</label>
+                <div className="mb-3">
+                    <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                     <input
                     type="password"
                     onChange={(e) => setPassword(e.target.value)}

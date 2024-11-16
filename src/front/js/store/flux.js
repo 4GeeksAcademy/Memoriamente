@@ -14,12 +14,12 @@ const getState = ({ getStore, getActions, setStore }) => {
             images: [],              // Arreglo que contiene las imágenes cargadas en el juego
             score: { current: 0 },   // Puntaje del jugador
             clicks: 0,               // Cantidad de clics realizados
-            size: 1,                 // Tamaño del nivel actual (cantidad de pares de cartas)
             time: 0,                 // Tiempo transcurrido en segundos
             timerInterval: null,     // Intervalo para manejar el temporizador
             timerRunning: false,     // Estado del temporizador (si está corriendo o detenido)
+            level: 1,  // Nivel inicial
 
-            auth: false
+            auth: false 
         },
 
         actions: {
@@ -96,69 +96,81 @@ const getState = ({ getStore, getActions, setStore }) => {
                     images: [],
                     score: { current: 0 },
                     clicks: 0,
-                    size: 1, // Nivel inicial
+                    level: 1, // Nivel inicial
                     time: 0,
                     timerInterval: null,
                     timerRunning: false,
                 });
 
                 // Recarga las imágenes para el primer nivel
-                getActions().fetchImages(1);
+                getActions().fetchImages();
             },
 
             //Carga imágenes y las baraja
-            fetchImages: async (size) => {
-                const images = [imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7];
-                const selectedImages = images.slice(0, size);
-                const shuffledImages = selectedImages
-                    .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
-                    .sort(() => Math.random() - 0.5); // Mezcla las imágenes
-                setStore({ images: shuffledImages, size: size, clicks: 0 }); // Reinicia los clics al cargar nuevas imágenes
+            // fetchImages: async (size) => {
+            //     const images = [imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7];
+            //     const selectedImages = images.slice(0, size);
+            //     const shuffledImages = selectedImages
+            //         .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
+            //         .sort(() => Math.random() - 0.5); // Mezcla las imágenes
+            //     setStore({ images: shuffledImages, size: size, clicks: 0 }); // Reinicia los clics al cargar nuevas imágenes
+            // },
+
+
+            fetchImages: async () => {
+                try {
+                    const store = getStore();
+                    // Asegúrate de que el número de imágenes dependa del nivel correctamente
+                    const size = store.level + 4; // Empezamos con 5 imágenes en el primer nivel
+            
+                    const response = await fetch(`https://rickandmortyapi.com/api/character`);
+                    const data = await response.json();
+            
+                    // Seleccionamos el número de imágenes acorde al nivel
+                    const images = data.results.slice(0, size).map((item) => item.image);
+            
+                    // Duplica y mezcla aleatoriamente las imágenes
+                    const shuffledImages = images
+                        .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
+                        .sort(() => Math.random() - 0.5); // Mezcla las imágenes
+            
+                    // Actualiza el estado con las nuevas imágenes y reinicia los clics
+                    setStore({ images: shuffledImages, clicks: 0 });
+                    return data;
+                } catch (error) {
+                    console.error("Error al cargar las imágenes desde la API:", error);
+                }
+            },
+            
+            levelUp: () => {
+                const store = getStore();
+                setStore({ level: store.level + 1 });
+                getActions().fetchImages(); // Recarga las imágenes para el nuevo nivel
+                getActions().resetTimer(); // Reinicia el temporizador para el nuevo nivel
             },
 
 
-            // fetchImages: async (size) => {
-            //     try {
-            //         //const accessKey = "TU_ACCESS_KEY"; // Reemplaza con tu clave de Unsplash
-            //         const response = await fetch(`https://rickandmortyapi.com/api/character`);
-            //         const data = await response.json();
-
-            //         // Asegúrate de que la URL de las imágenes esté en `data.results`
-            //         const images = await data.results.slice(0, 20).map((item) => item.image); // Obtén solo las primeras 20 imágenes
-
-            //         // Duplica y mezcla aleatoriamente las imágenes
-            //         const shuffledImages = await images
-            //             .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen con identificadores
-            //             .sort(() => Math.random() - 0.5); // Mezcla las imágenes
-
-            //         setStore({ images: shuffledImages, size: size, clicks: 0 });
-
-            //         return data;
-            //     } catch (error) {
-            //         console.error("Error al cargar las imágenes desde la API:", error);
-            //     }
-            // },
 
 
             // Calcula el puntaje en función del nivel y la cantidad de clics
             calculateScore: () => {
-                const store = getStore();
-                const passLevel = store.size * 10;
-                let total = store.score.current;
-                const cards = store.size * 2;
+                // const store = getStore();
+                // const passLevel = store.size * 10;
+                // let total = store.score.current;
+                // const cards = store.size * 2;
 
 
-                if (store.clicks === cards) {
-                    total += (cards * 2) + passLevel;
-                } else if (store.clicks > cards && store.clicks < cards + 5) {
-                    total += cards + passLevel;
-                } else if (store.clicks > cards + 5 && store.clicks < cards + 10) {
-                    total += cards / 2 + passLevel;
-                } else {
-                    total += Math.round(cards / 3) + passLevel;
-                }
+                // if (store.clicks === cards) {
+                //     total += (cards * 2) + passLevel;
+                // } else if (store.clicks > cards && store.clicks < cards + 5) {
+                //     total += cards + passLevel;
+                // } else if (store.clicks > cards + 5 && store.clicks < cards + 10) {
+                //     total += cards / 2 + passLevel;
+                // } else {
+                //     total += Math.round(cards / 3) + passLevel;
+                // }
 
-                setStore({ clicks: 0, score: { current: total }, time: 0 }); // Resetea clics y tiempo
+                // setStore({ clicks: 0, score: { current: total }, time: 0 }); // Resetea clics y tiempo
             },
 
             // Actualiza la cantidad de clics
@@ -171,29 +183,29 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             signup: async (name, lastname, seudonimo, email, password) => {
 
-				const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/signup', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
+                const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
                         name: name,
                         lastname: lastname,
                         seudonimo: seudonimo,
-						email: email,
-						password: password,
-						is_active: true
-					})
-				});
+                        email: email,
+                        password: password,
+                        is_active: true
+                    })
+                });
 
-				if (!response.ok) {
-					const errorData = await response.json();
-					throw new Error(errorData.msg || 'Error en el signup');
-				}
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.msg || 'Error en el signup');
+                }
 
-				const data = await response.json();
-				console.log('Signup exitoso:', data);
-				alert('Registro exitoso!')
+                const data = await response.json();
+                console.log('Signup exitoso:', data);
+                alert('Registro exitoso!')
 
-			},
+            },
 
             //2
 
