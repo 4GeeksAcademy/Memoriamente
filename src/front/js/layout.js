@@ -11,6 +11,7 @@ import injectContext from "./store/appContext";
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import  ProtectedRoute  from "./pages/protectedRoute";
+import ResetPassword from "./pages/resetPassword";
 
 import Login from "./pages/login";
 import Signup from "./pages/signup";
@@ -37,6 +38,7 @@ const Layout = () => {
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
+                        <Route element={<ResetPassword />} path="/reset-password" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

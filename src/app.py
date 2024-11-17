@@ -14,6 +14,8 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from api.models import User 
+from flask_cors import CORS
 
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -31,13 +33,16 @@ static_file_dir = os.path.join(os.path.dirname(
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
+# Allow CORS requests to this API
+CORS(app)
+
 # Configuración de Flask-Mail
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'tucorreogmail.com'
-app.config['MAIL_PASSWORD'] = 'password'
+app.config['MAIL_USERNAME'] = 'memoriamentegame@gmail.com'
+app.config['MAIL_PASSWORD'] = 'gval wrva xmld hvzc'
 
 mail = Mail(app)
 
@@ -58,14 +63,14 @@ def forgot_password():
         <body>
             <h1>Restablece tu contraseña</h1>
             <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-            <a href="http://improved-space-fortnight-7vv9rvwq6x9gfpx4-3000.app.github.dev/resetPassword?token={token}">Restablecer contraseña</a>
+            <a href="http://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/resetPassword?token={token}">Restablecer contraseña</a>
         </body>
     </html>
     """
     # Enviar el correo
     msg = Message(
         "Restablecimiento de contraseña",
-        sender="noreply@example.com",  # Usa un correo válido
+        sender="memoriamentegame@gmail.com",  # Usa un correo válido
         recipients=[user.email],
         html=template_html
     )

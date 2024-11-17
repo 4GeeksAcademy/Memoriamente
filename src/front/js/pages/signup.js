@@ -43,7 +43,7 @@ const Signup = () => {
                  {/* Campo de nombre */}
 
                  <div className="mb-3">
-                    <label for="Name" class="form-label">Nombre</label>
+                    <label htmlFor="Name" className="form-label">Nombre</label>
                     <input type="Nombre"
                         onChange={(e) => setName(e.target.value)}
                         value={name} placeholder="Nombre"
@@ -59,7 +59,7 @@ const Signup = () => {
                  {/* Campo de apellido */}
 
                  <div className="mb-3">
-                    <label for="lastname" class="form-label">Apellido</label>
+                    <label htmlFor="lastname" className="form-label">Apellido</label>
                     <input type="Apellido"
                         onChange={(e) => setLastname(e.target.value)}
                         value={lastname} placeholder="Apellido"
@@ -73,7 +73,7 @@ const Signup = () => {
                 {/* Campo de seudonimo */}
 
                 <div className="mb-3">
-                    <label htmlFor="seudonimo" class="form-label">Seudonimo</label>
+                    <label htmlFor="seudonimo" className="form-label">Seudonimo</label>
                     <input type="Seudonimo"
                         onChange={(e) => setSeudonimo(e.target.value)}
                         value={seudonimo} placeholder="Seudonimo"
@@ -87,7 +87,7 @@ const Signup = () => {
                  {/* Campo de email */}
 
                 <div className="mb-3">
-                    <label htmlFor="exampleInputEmail1" class="form-label">Email address</label>
+                    <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
                     <input type="email"
                         onChange={(e) => setEmail(e.target.value)}
                         value={email} placeholder="name@example.com"
@@ -100,8 +100,8 @@ const Signup = () => {
 
                  {/* Campo de contraseña */}
 
-                <div class="mb-3">
-                    <label htmlFor="exampleInputPassword1" class="form-label">Password</label>
+                <div className="mb-3">
+                    <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
                     <input type="password" 
                     onChange={(e) => setPassword(e.target.value)} 
                     value={password} placeholder="password" 

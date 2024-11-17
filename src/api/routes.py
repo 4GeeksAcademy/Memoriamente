@@ -5,6 +5,7 @@ from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 from flask_jwt_extended import create_access_token
@@ -63,6 +64,11 @@ def signup():
         return jsonify(response_body), 200
     else:
         return jsonify({"msg": "Ya se encuentra un usuario creado con ese correo"}), 401
+    
+
+    # Ocultar la contraseña
+    hashed_password = generate_password_hash(data['password'])
+
     
 #Private Pagina
 @api.route("/demo", methods=["GET"])
