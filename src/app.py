@@ -5,6 +5,10 @@ import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
+from flask_mail import Mail, Message #RESTABLECER CONTRASEÑA
+from datetime import timedelta  #TIEMPO PARA RESTABLECER CONTRASEÑA
+from werkzeug.security import generate_password_hash  # Importa para generar hash
+
 from api.utils import APIException, generate_sitemap
 from api.models import db
 from api.routes import api
@@ -17,6 +21,8 @@ from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager 
 
 
+
+
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -24,6 +30,67 @@ static_file_dir = os.path.join(os.path.dirname(
     os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+# Configuración de Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'tucorreogmail.com'
+app.config['MAIL_PASSWORD'] = 'password'
+
+mail = Mail(app)
+
+@app.route('/forgot-password', methods=['POST']) #olvido contraseña
+def forgot_password():
+    email=request.json.get('email')
+    user= User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({"msg":"Email not found"}), 404
+    
+     # Generar un token de acceso con una expiración de 5 minutos
+    token=create_access_token(identity=user.id,expires_delta=timedelta(minutes=5))
+
+
+     # Crear el contenido del correo electrónico
+    template_html = f"""
+    <html>
+        <body>
+            <h1>Restablece tu contraseña</h1>
+            <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
+            <a href="http://improved-space-fortnight-7vv9rvwq6x9gfpx4-3000.app.github.dev/resetPassword?token={token}">Restablecer contraseña</a>
+        </body>
+    </html>
+    """
+    # Enviar el correo
+    msg = Message(
+        "Restablecimiento de contraseña",
+        sender="noreply@example.com",  # Usa un correo válido
+        recipients=[user.email],
+        html=template_html
+    )
+    mail.send(msg)
+
+    return jsonify({"msg": "Correo enviado"}), 200
+
+@app.route('/reset-password', methods=['POST']) #restablecer contraseña
+@jwt_required()
+def reset_password():
+    user_id = get_jwt_identity()  # Obtiene el ID del usuario del token JWT
+    password = request.json.get('password')  # Obtiene la nueva contraseña
+    user = User.query.get(user_id)  # Busca al usuario por ID
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    # Generar el hash de la nueva contraseña y guardarlo
+    user.password = generate_password_hash(password)
+    db.session.commit()
+
+    return jsonify({"msg": "Contraseña actualizada"}), 200
+
+
+
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -42,6 +109,8 @@ setup_admin(app)
 
 # add the admin
 setup_commands(app)
+
+
 
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = "Leones del caracas Campeones"  # Change this!

@@ -48,7 +48,7 @@ export const Card = () => {
             setOpened([]); // Resetea las cartas abiertas
             actions.fetchImages(); // Carga nuevas imágenes para el siguiente nivel
             actions.resetTimer(); // Reinicia el temporizador para el nuevo nivel
-            setStore({ level: store.level + 1 }); // Incrementa el nivel
+            //setStore({ level: store.level + 1 }); // Incrementa el nivel
         }
     }, [opened, store.images.length, actions]);
 
