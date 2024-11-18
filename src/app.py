@@ -63,7 +63,7 @@ def forgot_password():
         <body>
             <h1>Restablece tu contraseña</h1>
             <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-            <a href="http://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/resetPassword?token={token}">Restablecer contraseña</a>
+            <a href="https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3000.app.github.dev/reset-password?token={token}">Restablecer contraseña</a>
         </body>
     </html>
     """

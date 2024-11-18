@@ -5,3 +5,56 @@ Todas las páginas comparten los estilos de index.css, pero debes crear
 un css más para cada página que contendrá los elementos seleccionados que se usan
 solo en esa página (los que no se reutilizan en otras páginas).
 */
+.home-container {
+   background-color: #1a1a1a; /* Fondo oscuro */
+   color: #00ff00; /* Verde neón */
+   padding: 20px;
+   border-radius: 10px;
+   font-family: 'Orbitron', Arial, sans-serif;
+ }
+ 
+ .logo-img {
+   width: 300px;
+   margin: 0 auto;
+ }
+ 
+ .title {
+   font-family: 'Orbitron', Arial, sans-serif; /* Usa una fuente temática si puedes incluirla */
+   color: #00ff00;
+   margin-top: 20px;
+   text-shadow: 2px 2px #000;
+ }
+ 
+ .portal-container {
+   margin-top: 20px;
+ }
+ 
+ .portal-img {
+   width: 200px;
+   animation: spin 5s infinite linear; /* Efecto de giro */
+ }
+ 
+ @keyframes spin {
+   from {
+     transform: rotate(0deg);
+   }
+   to {
+     transform: rotate(360deg);
+   }
+ }
+ 
+ .card-container {
+   margin-top: 20px;
+   display: flex;
+   gap: 20px;
+   flex-wrap: wrap;
+   justify-content: center;
+   font-family: 'Orbitron', Arial, sans-serif;
+ }
+ 
+ .alert-info {
+   background-color: #333;
+   color: #fff;
+   border: 1px solid #00ff00;
+ }
+ 

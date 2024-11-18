@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 
 const ResetPassword = () => {
@@ -27,14 +26,17 @@ const ResetPassword = () => {
 
     try {
       // Realiza una solicitud a la API para restablecer la contraseña
-      const response = await fetch("http://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/reset-password", {
-        method: "POST", // Método POST para enviar datos
-        headers: {
-          "Content-Type": "application/json", // Indica que el cuerpo de la solicitud es JSON
-          "Authorization": `Bearer ${token}`, // Incluye el token en el encabezado para autenticación
-        },
-        body: JSON.stringify({ password }), // Envía la nueva contraseña como JSON en el cuerpo de la solicitud
-      });
+      const response = await fetch(
+        "http://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/reset-password",
+        {
+          method: "POST", // Método POST para enviar datos
+          headers: {
+            "Content-Type": "application/json", // Indica que el cuerpo de la solicitud es JSON
+            Authorization: `Bearer ${token}`, // Incluye el token en el encabezado para autenticación
+          },
+          body: JSON.stringify({ password }), // Envía la nueva contraseña como JSON en el cuerpo de la solicitud
+        }
+      );
 
       const data = await response.json(); // Extrae la respuesta en formato JSON
 
@@ -51,33 +53,57 @@ const ResetPassword = () => {
     }
   };
 
-  
   return (
-    <div>
-      <h1>Restablecer contraseña</h1>
-     
-      {message && <p>{message}</p>}
-     
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nueva contraseña:
+    <div className="d-flex justify-content-center mt-5">
+      <form
+        onSubmit={handleSubmit}
+        className="p-4 bg-dark text-white rounded"
+      >
+        <h1 className="titulo">Restablecer contraseña</h1>
+
+        {/* Muestra el mensaje si existe */}
+        {message && (
+          <div className={`alert ${message.includes("éxito") ? "alert-success" : "alert-danger"}`}>
+            {message}
+          </div>
+        )}
+
+        {/* Campo de nueva contraseña */}
+        <div className="mb-3">
+          <label htmlFor="password" className="form-label">
+            Nueva contraseña
+          </label>
           <input
             type="password" // Campo de entrada para contraseñas
+            id="password"
+            className="form-control"
             value={password} // Enlaza el valor del campo al estado 'password'
             onChange={(e) => setPassword(e.target.value)} // Actualiza el estado cuando el usuario escribe
             required // Campo obligatorio
+            placeholder="Escribe tu nueva contraseña"
           />
-        </label>
-        <label>
-          Confirmar contraseña:
+        </div>
+
+        {/* Campo de confirmar contraseña */}
+        <div className="mb-3">
+          <label htmlFor="confirmPassword" className="form-label">
+            Confirmar contraseña
+          </label>
           <input
             type="password" // Campo de entrada para confirmar la contraseña
+            id="confirmPassword"
+            className="form-control"
             value={confirmPassword} // Enlaza el valor del campo al estado 'confirmPassword'
             onChange={(e) => setConfirmPassword(e.target.value)} // Actualiza el estado cuando el usuario escribe
             required // Campo obligatorio
+            placeholder="Confirma tu nueva contraseña"
           />
-        </label>
-        <button type="submit">Restablecer contraseña</button> {/* Botón para enviar el formulario */}
+        </div>
+
+        {/* Botón para enviar el formulario */}
+        <button type="submit" className="btn btn-primary">
+          Restablecer contraseña
+        </button>
       </form>
     </div>
   );

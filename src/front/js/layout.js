@@ -6,15 +6,17 @@ import { BackendURL } from "./component/backendURL";
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
 import { Card } from "./pages/card";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import { Score } from "./pages/score";
 import injectContext from "./store/appContext";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
-import  ProtectedRoute  from "./pages/protectedRoute";
+import  ProtectedRoute  from "./pages/protectedRoute";  
 import ResetPassword from "./pages/resetPassword";
 
-import Login from "./pages/login";
-import Signup from "./pages/signup";
+
 
 //create your first component
 const Layout = () => {
@@ -39,6 +41,7 @@ const Layout = () => {
                         <Route element={<Login />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<ResetPassword />} path="/reset-password" />
+                        <Route element={<Score />} path="/Score" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

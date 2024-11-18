@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import rickAndMortyLogo from "../../img/rick-and-morty-logo.png"; // Importa el logo correctamente
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -39,7 +41,7 @@ const Login = () => {
             alert("Por favor, introduce un correo válido.");
             return;
         }
-    
+
         try {
             const response = await fetch("https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/forgot-password", {
                 method: "POST",
@@ -48,7 +50,7 @@ const Login = () => {
                 },
                 body: JSON.stringify({ email: recoveryEmail }),
             });
-    
+
             if (response.ok) {
                 alert(`Correo enviado a ${recoveryEmail} para recuperar la contraseña.`);
                 setRecoveryEmail(""); // Limpiar el email
@@ -64,6 +66,7 @@ const Login = () => {
     };
     return (
         <div className="d-flex justify-content-center mt-5">
+           
             <form onSubmit={handleSubmit} className="p-4 bg-dark text-white rounded">
                 <h1 className="titulo">Login</h1>
 
@@ -151,6 +154,8 @@ const Login = () => {
                                 >
                                     Enviar
                                 </button>
+
+                                
                             </div>
                         </div>
                     </div>
