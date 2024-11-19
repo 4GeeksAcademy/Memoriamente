@@ -29,7 +29,7 @@ const Signup = () => {
 
     return (
         <div className="auth-container">
-            <h1 className="auth-title">Registrarse</h1>
+            <h1 className="auth-title">Registro</h1>
             <form onSubmit={handleSubmit} className="auth-form">
                 <div className="mb-3">
                     <label className="form-label">Nombre</label>

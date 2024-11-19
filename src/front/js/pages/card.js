@@ -44,7 +44,7 @@ export const Card = () => {
         if (opened.length === store.images.length) { // Compara cartas abiertas con el total de cartas
             actions.stopTimer(); // Detiene el temporizador
             actions.calculateScore(); // Calcula el puntaje
-            //setSize((prevSize) => prevSize + 1); // Incrementa el nivel (aumenta el tamaño del juego)
+           // setSize((prevSize) => prevSize + 1); // Incrementa el nivel (aumenta el tamaño del juego)
             setOpened([]); // Resetea las cartas abiertas
             actions.fetchImages(); // Carga nuevas imágenes para el siguiente nivel
             actions.resetTimer(); // Reinicia el temporizador para el nuevo nivel

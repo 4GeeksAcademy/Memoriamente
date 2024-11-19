@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import rickAndMortyLogo from "../../img/rick-and-morty-logo.png"; // Importa el logo correctamente
+import "../../styles/auth.css"; // Usamos el mismo archivo de estilos
+import imagen42 from "../../img/42.png"
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -15,7 +15,6 @@ const Login = () => {
     // Manejar el envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault(); // Prevenir que el formulario recargue la página
-
         try {
             // Realiza la llamada a la acción de login
             const response = await actions.login(email, password);
@@ -64,85 +63,97 @@ const Login = () => {
             alert("Hubo un error al enviar el correo.");
         }
     };
+
     return (
-        <div className="d-flex justify-content-center mt-5">
-           
-            <form onSubmit={handleSubmit} className="p-4 bg-dark text-white rounded">
-                <h1 className="titulo">Login</h1>
 
-                {/* Campo de email */}
-                <div className="mb-3">
-                    <label htmlFor="Email" className="form-label">Email address</label>
-                    <input
-                        type="email"
-                        onChange={(e) => setEmail(e.target.value)}
-                        value={email}
-                        placeholder="name@example.com"
-                        autoComplete="off"
-                        required
-                        className="form-control"
-                        aria-describedby="emailHelp"
-                    />
-                </div>
+        <div className="auth-layout">
+            {/* Imagen en la parte izquierda */}
+            <div className="auth-image">
+                <img
+                    src={imagen42}
+                    alt="Login Illustration"
+                />
+            </div>
 
-                {/* Campo de contraseña */}
-                <div className="mb-3">
-                    <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-                    <input
-                        type="password"
-                        onChange={(e) => setPassword(e.target.value)}
-                        value={password}
-                        placeholder="password"
-                        autoComplete="off"
-                        required
-                        className="form-control"
-                    />
-                </div>
+            <div className="auth-container">
+                {/* Título */}
+                <h1 className="auth-title">Iniciar Sesión</h1>
+                {/* Formulario */}
+                <form onSubmit={handleSubmit} className="auth-form">
+                    {/* Campo de email */}
+                    <div className="mb-3">
+                        <label htmlFor="Email" className="form-label">
+                            Correo Electrónico
+                        </label>
+                        <input
+                            type="email"
+                            onChange={(e) => setEmail(e.target.value)}
+                            value={email}
+                            placeholder="name@example.com"
+                            autoComplete="off"
+                            required
+                            className="form-control"
+                            aria-describedby="emailHelp"
+                        />
+                    </div>
 
-                {/* Botón de enviar */}
-                <button type="submit" className="boton me-3">
-                    Enviar
-                </button>
+                    {/* Campo de contraseña */}
+                    <div className="mb-3">
+                        <label htmlFor="exampleInputPassword1" className="form-label">
+                            Contraseña
+                        </label>
+                        <input
+                            type="password"
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
+                            placeholder="Contraseña"
+                            autoComplete="off"
+                            required
+                            className="form-control"
+                        />
+                    </div>
 
-                {/* Botón para abrir el modal */}
-                <div className="ml-auto">
+                    {/* Botón de enviar */}
+                    <button type="submit" className="boton me-3">
+                        Iniciar Sesión
+                    </button>
+
+                    {/* Botón para abrir el modal */}
                     <button
                         type="button"
                         className="btn btn-primary"
                         onClick={() => setShowModal(true)} // Mostrar el modal
                     >
-                        Olvidó contraseña
+                        ¿Olvidaste tu contraseña?
                     </button>
-                </div>
-            </form>
+                </form>
 
-            {/* Modal */}
-            {showModal && (
-                <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Recuperar Contraseña</h5>
-                                <button
-                                    type="button"
-                                    className="btn-close"
-                                    onClick={() => setShowModal(false)} // Cerrar el modal
-                                ></button>
-                            </div>
-                            <div className="modal-body">
-                                <p>Introduce tu correo electrónico para recuperar tu contraseña.</p>
+                {/* Modal */}
+                {showModal && (
+                    <div
+                        className="auth-container modal-container"
+                        style={{
+                            backgroundColor: "rgba(0, 0, 0, 0.9)", // Fondo semitransparente oscuro
+                            boxShadow: "0 0 20px #00ff00", // Sombra verde brillante
+                        }}
+                    >
+                        {/* Estructura del modal */}
+                        <h2 className="auth-title">Recuperar Contraseña</h2>
+                        <form className="auth-form">
+                            <div className="mb-3">
+                                <label className="form-label">Correo Electrónico</label>
                                 <input
                                     type="email"
                                     className="form-control"
-                                    placeholder="Correo electrónico"
+                                    placeholder="name@example.com"
                                     value={recoveryEmail}
                                     onChange={(e) => setRecoveryEmail(e.target.value)}
                                 />
                             </div>
-                            <div className="modal-footer">
+                            <div className="d-flex justify-content-end">
                                 <button
                                     type="button"
-                                    className="btn btn-secondary"
+                                    className="boton me-2"
                                     onClick={() => setShowModal(false)} // Cerrar el modal
                                 >
                                     Cancelar
@@ -154,13 +165,11 @@ const Login = () => {
                                 >
                                     Enviar
                                 </button>
-
-                                
                             </div>
-                        </div>
+                        </form>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

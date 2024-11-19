@@ -1,25 +1,32 @@
 /* navbar.css */
 
+/* Establece el fondo y otros estilos */
 .navbar {
     background: linear-gradient(45deg, #2E3192, #1BFFFF); /* Fondo con degradado cósmico */
     border-bottom: 3px solid #00ff00; /* Línea verde brillante */
     color: white;
-    font-family: 'Orbitron', Arial, sans-serif;/* Fuente personalizada si la tienes */
+    font-family: 'Orbitron', Arial, sans-serif; /* Fuente personalizada */
+    padding: 10px 20px; /* Reduce la altura del navbar ajustando el padding */
 }
 
-.navbar-brand {
-    font-size: 1.5rem;
-    color: #ffffff;
+/* Logo dentro del navbar */
+.navbar .container img {
+    height: 150px; /* Ajusta el tamaño del logo */
+}
+
+/* Estilo de los botones (reduce un poco la altura) */
+.navbar .buttons-container .btn {
+    font-size: 1rem;
+    padding: 10px 15px; /* Reducir el padding de los botones */
     font-weight: bold;
-    text-shadow: 0px 0px 10px #00ff00; /* Efecto de brillo */
+    text-shadow: 0px 0px 5px #000000;
 }
 
+/* Estilo de los botones para efectos hover */
 .navbar .btn-primary {
     background-color: #00ff00;
     border-color: #00ff00;
     color: black;
-    font-weight: bold;
-    text-shadow: 0px 0px 5px #000000;
 }
 
 .navbar .btn-primary:hover {
@@ -28,7 +35,10 @@
     color: black;
 }
 
+/* Estilo para el contenedor de los botones (ajustar espaciado si es necesario) */
 .navbar .ml-auto {
     display: flex;
-    gap: 10px;
+    gap: 10px; /* Espacio entre los botones */
 }
+
+/* También puedes ajustar márgenes si es necesario */

@@ -10,6 +10,8 @@
     color: #ffffff;
     box-shadow: 0 0 15px #00ff00;
     font-family: 'Orbitron', Arial, sans-serif;
+    flex: 1; /* Hace que el formulario ocupe el espacio restante */
+    margin-left: auto ;
 }
 
 .auth-title {
@@ -47,12 +49,14 @@
     font-size: 1rem;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    
 }
 
 .auth-form .boton:hover {
     background-color: #00cc00;
     transform: scale(1.05);
     box-shadow: 0 0 10px #00ff00;
+   
 }
 
 .auth-form .btn-primary {
@@ -61,10 +65,29 @@
     font-weight: bold;
     color: #000000;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px; 
 }
 
 .auth-form .btn-primary:hover {
     background-color: #0099cc;
     transform: scale(1.05);
     box-shadow: 0 0 10px #00ccff;
+}
+
+.auth-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Espacio entre la imagen y el formulario */
+    margin: 20px;
+    padding: 50px;
+    max-width: 1000px; /* Ancho máximo del layout */
+    margin-left: 100px;
+    
+}
+
+/* Estilo para la imagen */
+.auth-image img {
+    max-width: 500px; /* Ajusta el ancho de la imagen */
+  
 }

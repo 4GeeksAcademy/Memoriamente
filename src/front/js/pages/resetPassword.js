@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "../../styles/resetPassword.css"; // Archivo CSS con el estilo Rick and Morty
 
 const ResetPassword = () => {
   // Estados para almacenar el token, la nueva contraseña, la confirmación de la contraseña y los mensajes
@@ -54,56 +55,49 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center mt-5">
-      <form
-        onSubmit={handleSubmit}
-        className="p-4 bg-dark text-white rounded"
-      >
-        <h1 className="titulo">Restablecer contraseña</h1>
+    <div className="rick-and-morty-container">
+      <form onSubmit={handleSubmit} className="rick-and-morty-form">
+        <h1 className="rick-and-morty-title">Restablecer Contraseña</h1> {/* Título principal */}
 
-        {/* Muestra el mensaje si existe */}
         {message && (
-          <div className={`alert ${message.includes("éxito") ? "alert-success" : "alert-danger"}`}>
-            {message}
-          </div>
+          <p
+            className={`rick-and-morty-alert ${
+              message.includes("éxito")
+                ? "rick-and-morty-success"
+                : "rick-and-morty-error"
+            }`}
+          >
+            {message} {/* Muestra el mensaje de error o éxito */}
+          </p>
         )}
 
-        {/* Campo de nueva contraseña */}
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Nueva contraseña
-          </label>
+        <div className="rick-and-morty-field">
+          <label htmlFor="password">Nueva contraseña:</label> {/* Etiqueta para la nueva contraseña */}
           <input
             type="password" // Campo de entrada para contraseñas
             id="password"
-            className="form-control"
             value={password} // Enlaza el valor del campo al estado 'password'
             onChange={(e) => setPassword(e.target.value)} // Actualiza el estado cuando el usuario escribe
+            placeholder="Escribe tu nueva contraseña" // Placeholder para la contraseña
             required // Campo obligatorio
-            placeholder="Escribe tu nueva contraseña"
           />
         </div>
 
-        {/* Campo de confirmar contraseña */}
-        <div className="mb-3">
-          <label htmlFor="confirmPassword" className="form-label">
-            Confirmar contraseña
-          </label>
+        <div className="rick-and-morty-field">
+          <label htmlFor="confirmPassword">Confirmar contraseña:</label> {/* Etiqueta para confirmar contraseña */}
           <input
             type="password" // Campo de entrada para confirmar la contraseña
             id="confirmPassword"
-            className="form-control"
             value={confirmPassword} // Enlaza el valor del campo al estado 'confirmPassword'
             onChange={(e) => setConfirmPassword(e.target.value)} // Actualiza el estado cuando el usuario escribe
+            placeholder="Confirma tu nueva contraseña" // Placeholder para la confirmación
             required // Campo obligatorio
-            placeholder="Confirma tu nueva contraseña"
           />
         </div>
 
-        {/* Botón para enviar el formulario */}
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="rick-and-morty-button">
           Restablecer contraseña
-        </button>
+        </button> {/* Botón para enviar el formulario */}
       </form>
     </div>
   );
