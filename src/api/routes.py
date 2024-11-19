@@ -31,43 +31,56 @@ def handle_hello():
 
 @api.route("/login", methods=["POST"])
 def login():
-    
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    email = request.json.get("email")
+    password = request.json.get("password")
 
+    # Verificar que se proporcionaron los campos
+    if not email or not password:
+        return jsonify({"msg": "Faltan datos"}), 400
+
+    # Buscar al usuario por email
     user = User.query.filter_by(email=email).first()
-    print(user)
 
-    #1
-    if not user or user.password != password:
-        return jsonify({"msg": "Email o password incorrecto"}), 401
+    # Validar si el usuario existe y la contraseña es correcta
+    if not user or not check_password_hash(user.password, password):
+        return jsonify({"msg": "Email o contraseña incorrectos"}), 401
 
-    access_token = create_access_token(identity=user.id)  # Cambiar a user.id para mayor seguridad
+    # Crear el token
+    access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token, msg="Login exitoso"), 200
+
 
 @api.route("/signup", methods=["POST"])
 def signup():
     body = request.get_json()
-    print(body)
 
-# Este User es para verificar si el email ha sido creado o no
+    # Verificar si falta algún campo
+    if not all(key in body for key in ["name", "lastname", "seudonimo", "email", "password"]):
+        return jsonify({"msg": "Faltan datos en el registro"}), 400
+
+    # Verificar si ya existe un usuario con el mismo email
     user = User.query.filter_by(email=body["email"]).first()
-    print(user)
-    if user == None:
-        #Si no ha sido creado esto crea el usuario
-        user = User(name=body["name"], lastname=body["lastname"], seudonimo=body["seudonimo"], email=body["email"], password=body["password"], is_active=True)
-        db.session.add(user)
-        db.session.commit()
-        response_body = {
-            "msg": "Usuario creado"
-        }
-        return jsonify(response_body), 200
-    else:
-        return jsonify({"msg": "Ya se encuentra un usuario creado con ese correo"}), 401
-    
+    if user:
+        return jsonify({"msg": "Ya existe un usuario con ese correo"}), 401
 
-    # Ocultar la contraseña
-    hashed_password = generate_password_hash(data['password'])
+    # Cifrar la contraseña
+    hashed_password = generate_password_hash(body["password"])
+
+    # Crear el nuevo usuario
+    user = User(
+        name=body["name"],
+        lastname=body["lastname"],
+        seudonimo=body["seudonimo"],
+        email=body["email"],
+        password=hashed_password,
+        is_active=True,
+    )
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({"msg": "Usuario creado exitosamente"}), 201
+
+
 
     
 #Private Pagina

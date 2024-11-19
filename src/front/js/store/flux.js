@@ -1,10 +1,4 @@
-import imagen1 from "../../img/1.png";
-import imagen2 from "../../img/2.png";
-import imagen3 from "../../img/3.png";
-import imagen4 from "../../img/4.png";
-import imagen5 from "../../img/5.png";
-import imagen6 from "../../img/6.png";
-import imagen7 from "../../img/7.png";
+
 
 const getState = ({ getStore, getActions, setStore }) => {
     return {
@@ -148,8 +142,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                 getActions().fetchImages(); // Recarga las imágenes para el nuevo nivel
                 getActions().resetTimer(); // Reinicia el temporizador para el nuevo nivel
             },
-
-
 
 
             // Calcula el puntaje en función del nivel y la cantidad de clics
@@ -301,6 +293,33 @@ const getState = ({ getStore, getActions, setStore }) => {
                 // Actualiza el estado global indicando que el usuario no está autenticado
                 setStore({ auth: false });
             },
+
+            //Restablecer Contraseña
+            resetPassword: async (password, token) => {
+                try {
+                    // Realizar solicitud para actualizar la contraseña
+                    const response = await fetch("https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/reset-password", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}` // Añade el token para autenticación
+                        },
+                        body: JSON.stringify({ password }) // Envía la nueva contraseña
+                    });
+            
+                    const data = await response.json();
+            
+                    if (response.ok) {
+                        return { success: true, msg: data.msg }; // Contraseña actualizada exitosamente
+                    } else {
+                        return { success: false, msg: data.msg || "Error al actualizar contraseña" }; // Error en la solicitud
+                    }
+                } catch (error) {
+                    console.error("Error en resetPassword:", error);
+                    return { success: false, msg: "Hubo un problema con el servidor" };
+                }
+            },
+            
 
 
 

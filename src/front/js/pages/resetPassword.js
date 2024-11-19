@@ -1,56 +1,35 @@
-import React, { useState, useEffect } from "react";
-import "../../styles/resetPassword.css"; // Archivo CSS con el estilo Rick and Morty
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "../store/appContext";
+import "../../styles/resetPassword.css"; 
 
 const ResetPassword = () => {
-  // Estados para almacenar el token, la nueva contraseña, la confirmación de la contraseña y los mensajes
-  const [token, setToken] = useState(""); // Token para autenticación
-  const [password, setPassword] = useState(""); // Nueva contraseña ingresada
-  const [confirmPassword, setConfirmPassword] = useState(""); // Confirmación de la nueva contraseña
-  const [message, setMessage] = useState(""); // Mensaje para mostrar resultados o errores
+  const { actions } = useContext(Context); // Acceder a las acciones de Flux
 
-  // Extrae el token de la URL cuando el componente se monta
+  // Estado para token, contraseña, y mensaje
+  const [token, setToken] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search); // Obtiene los parámetros de la URL
-    const tokenFromURL = urlParams.get("token"); // Extrae el token del parámetro 'token'
-    setToken(tokenFromURL); // Guarda el token en el estado
-  }, []); // El arreglo vacío asegura que este efecto se ejecute solo una vez al montar el componente
+    const urlParams = new URLSearchParams(window.location.search);
+    setToken(urlParams.get("token")); // Extraer el token de la URL
+  }, []);
 
-  // Maneja el envío del formulario para actualizar la contraseña
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Previene el comportamiento predeterminado del formulario (recargar la página)
+    e.preventDefault();
 
-    // Validación: Verifica que las contraseñas coincidan
     if (password !== confirmPassword) {
-      setMessage("Las contraseñas no coinciden"); // Muestra un mensaje de error si no coinciden
-      return; // Detiene el proceso de envío
+      setMessage("Las contraseñas no coinciden");
+      return;
     }
 
-    try {
-      // Realiza una solicitud a la API para restablecer la contraseña
-      const response = await fetch(
-        "http://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/reset-password",
-        {
-          method: "POST", // Método POST para enviar datos
-          headers: {
-            "Content-Type": "application/json", // Indica que el cuerpo de la solicitud es JSON
-            Authorization: `Bearer ${token}`, // Incluye el token en el encabezado para autenticación
-          },
-          body: JSON.stringify({ password }), // Envía la nueva contraseña como JSON en el cuerpo de la solicitud
-        }
-      );
+    const result = await actions.resetPassword(password, token); // Llamar a la acción resetPassword
 
-      const data = await response.json(); // Extrae la respuesta en formato JSON
-
-      // Si la solicitud fue exitosa
-      if (response.ok) {
-        setMessage("¡Contraseña actualizada con éxito!"); // Muestra un mensaje de éxito
-      } else {
-        // Si hubo un error, muestra el mensaje proporcionado por el servidor o un mensaje genérico
-        setMessage(data.msg || "Error al restablecer la contraseña");
-      }
-    } catch (error) {
-      console.error("Error:", error); // Muestra el error en la consola para depuración
-      setMessage("Hubo un error al conectarse con el servidor"); // Muestra un mensaje de error genérico
+    if (result.success) {
+      setMessage("¡Contraseña actualizada con éxito!");
+    } else {
+      setMessage(result.msg || "Error al restablecer la contraseña");
     }
   };
 

@@ -8,7 +8,7 @@ class User(db.Model):
     lastname = db.Column(db.String(120), unique=True, nullable=False)
     seudonimo = db.Column(db.String(120), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)    
-    password = db.Column(db.String(80), unique=False, nullable=False)
+    password = db.Column(db.String(255), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     
 
@@ -18,7 +18,7 @@ class User(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "nombre": self.nombre,
+            "name": self.name,
             "lastname": self.lastname,
             "seudonimo": self.seudonimo,
             "email": self.email,

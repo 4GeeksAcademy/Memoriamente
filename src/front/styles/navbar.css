@@ -12,6 +12,7 @@
 /* Logo dentro del navbar */
 .navbar .container img {
     height: 150px; /* Ajusta el tamaño del logo */
+    margin: -38px;
 }
 
 /* Estilo de los botones (reduce un poco la altura) */

@@ -78,12 +78,17 @@ def forgot_password():
 
     return jsonify({"msg": "Correo enviado"}), 200
 
-@app.route('/reset-password', methods=['POST']) #restablecer contraseña
+@app.route('/reset-password', methods=['POST'])  # Restablecer contraseña
 @jwt_required()
 def reset_password():
-    user_id = get_jwt_identity()  # Obtiene el ID del usuario del token JWT
-    password = request.json.get('password')  # Obtiene la nueva contraseña
-    user = User.query.get(user_id)  # Busca al usuario por ID
+    user_id = get_jwt_identity()  # Obtener el ID del usuario del token JWT
+    password = request.json.get('password')
+
+    # Verificar que se proporcionó la contraseña
+    if not password:
+        return jsonify({"msg": "Se requiere una nueva contraseña"}), 400
+
+    user = User.query.get(user_id)  # Buscar al usuario por ID
 
     if not user:
         return jsonify({"msg": "Usuario no encontrado"}), 404
