@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import rickAndMortyLogo from "../../img/rick-and-morty-logo.png";
 import "../../styles/home.css";
 import imagen29 from "../../img/29.png"
+import memoriamente from "../../img/memoriamente.png"
 
 export const Home = () => {
 	// Estado para controlar el índice del diálogo
@@ -33,7 +34,7 @@ export const Home = () => {
 
 	return (
 
-		<div className="auth-layout">
+		<div className="auth-layout1">
 			{/* Imagen en la parte izquierda */}
 			<div className="auth-image">
 				<img
@@ -50,7 +51,10 @@ export const Home = () => {
 
 
 				{/* Título */}
-				<h1>MEMORIAMENTE</h1>
+				<img
+					src={memoriamente}
+					alt="Login Illustration"
+				/>
 
 				{/* Contenedor del diálogo */}
 				<div className="dialog-container mt-4">

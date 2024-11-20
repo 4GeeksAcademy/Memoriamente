@@ -189,13 +189,22 @@ solo en esa página (los que no se reutilizan en otras páginas).
   margin-left: 20px; /* Más espacio hacia la derecha */
 }
 
+.home-container img {
+  width: 800px; /* El ancho será de 300px */
+  max-height: 200px; /* Ajusta la altura máxima si es necesario */
+}
+
+
 /* Layout general */
-.auth-layout {
+.auth-layout1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 40px; /* Más espacio entre la imagen y el contenido */
-  padding: 50px; /* Más espacio interno */
-  margin: 40px auto; /* Centrado y espacio superior/inferior */
+  gap: 20px; /* Espacio entre la imagen y el formulario */
+  margin: 20px;
+  padding: 50px;
+  max-width: 1300px; /* Ancho máximo del layout */
+  margin-top: -50px;
+  
 }
 

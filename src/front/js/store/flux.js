@@ -319,6 +319,33 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return { success: false, msg: "Hubo un problema con el servidor" };
                 }
             },
+
+            // Olvide contraseña
+
+            recoverPassword: async (email) => {
+                try {
+                    const response = await fetch(
+                        "https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/forgot-password",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ email }),
+                        }
+                    );
+
+                    if (response.ok) {
+                        return { success: true, msg: `Correo enviado a ${email} para recuperar la contraseña.` };
+                    } else {
+                        const data = await response.json();
+                        return { success: false, msg: `Error: ${data.msg}` };
+                    }
+                } catch (error) {
+                    console.error("Error al enviar el correo de recuperación:", error);
+                    return { success: false, msg: "Hubo un error al enviar el correo." };
+                }
+            },
             
 
 

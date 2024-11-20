@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Card } from "./card";
+import { Score } from "./score";
 import "../../styles/demo.css";
 import { Context } from "../store/appContext";
 
@@ -17,11 +18,14 @@ export const Demo = () => {
 				<div className="col-12 col-md-8 col-lg-6">
 					<div className="card-container mb-4">
 						<Card />
+						
 					</div>
-					<Link to="/">
-						<button className=" button btn btn-primary">Back home</button>
+					<Link to="/score">
+						<button className=" button btn btn-primary">Tabla de Puntuacion</button>
 					</Link>
 				</div>
+
+				
 			</div>
 		</div>
 	);

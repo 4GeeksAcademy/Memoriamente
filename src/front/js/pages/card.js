@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import "../../styles/card.css";
 import questions from "../../img/questions-mark.png";
 
+
 export const Card = () => {
 
        

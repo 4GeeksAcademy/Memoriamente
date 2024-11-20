@@ -28,6 +28,22 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+# Traer todos los usuarios
+@api.route("/users", methods=["GET"])
+def users_list():    
+    users = User.query.all()
+    all_users = list(map(lambda x: x.serialize(), users))  # Convertir los objetos SQLAlchemy a diccionarios
+    return jsonify(all_users), 200  # Responder con JSON y código 200
+
+# Obtener un usuario por ID
+@api.route("/users/<int:id>", methods=["GET"])
+def get_user(id):
+    user = User.query.get(id)  # Obtener el usuario por su ID
+    if user is None:  # Validar si existe
+        return jsonify({"error": "User not found"}), 404  # Responder con un error 404 si no se encuentra
+    return jsonify(user.serialize()), 200  # Responder con JSON serializado y código 200
+
+# Registro de Iniciar Sesion
 
 @api.route("/login", methods=["POST"])
 def login():

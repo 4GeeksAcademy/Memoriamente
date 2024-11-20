@@ -40,27 +40,15 @@ const Login = () => {
             alert("Por favor, introduce un correo válido.");
             return;
         }
-
-        try {
-            const response = await fetch("https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/forgot-password", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ email: recoveryEmail }),
-            });
-
-            if (response.ok) {
-                alert(`Correo enviado a ${recoveryEmail} para recuperar la contraseña.`);
-                setRecoveryEmail(""); // Limpiar el email
-                setShowModal(false); // Cerrar el modal
-            } else {
-                const data = await response.json();
-                alert(`Error: ${data.msg}`);
-            }
-        } catch (error) {
-            console.error("Error al enviar el correo de recuperación:", error);
-            alert("Hubo un error al enviar el correo.");
+    
+        const result = await actions.recoverPassword(recoveryEmail); // Llama a la acción
+    
+        if (result.success) {
+            alert(result.msg); // Muestra el mensaje de éxito
+            setRecoveryEmail(""); // Limpia el email
+            setShowModal(false); // Cierra el modal
+        } else {
+            alert(result.msg); // Muestra el mensaje de error
         }
     };
 
