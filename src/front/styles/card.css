@@ -92,3 +92,70 @@
     box-shadow: 0 0 15px rgba(255, 235, 59, 0.7);
     background-color: #ffeb3b; /* cambia a amarillo al pasar el ratón */
 }
+
+ /* DESDE AQUI LOS ESTILOS DEL MODAL */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content.rick-and-morty {
+    background: linear-gradient(145deg, #34eb5c, #2ec4b6); /* Verde y azul como los portales */
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    color: #fff; /* Texto blanco */
+    font-family: 'Get Schwifty', sans-serif; /* Usa una fuente alusiva a Rick and Morty */
+}
+
+.modal-content.rick-and-morty h2 {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px #000;
+}
+
+.modal-content.rick-and-morty p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.modal-content .btn-success {
+    background-color: #ffcc00; /* Amarillo brillante */
+    color: #000;
+    transition: transform 0.3s ease;
+}
+
+.modal-content .btn-success:hover {
+    background-color: #ffc107;
+    transform: scale(1.1);
+}
+
+.modal-content .btn-secondary {
+    background-color: #ff3860; /* Rojo brillante */
+    color: #fff;
+    transition: transform 0.3s ease;
+}
+
+.modal-content .btn-secondary:hover {
+    background-color: #ff1744;
+    transform: scale(1.1);
+}

@@ -130,7 +130,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const data = await response.json();
 
                     // Seleccionamos el número de imágenes acorde al nivel
-                    const images = data.results.slice(0, size).map((item) => item.image);
+                    const images = data.results.slice(0, store.level).map((item) => item.image);
 
                     // Duplica y mezcla aleatoriamente las imágenes
                     const shuffledImages = images
@@ -148,15 +148,15 @@ const getState = ({ getStore, getActions, setStore }) => {
             levelUp: () => {
                 const store = getStore();
                 setStore({ level: store.level + 1 });
-                getActions().fetchImages(); // Recarga las imágenes para el nuevo nivel
-                getActions().resetTimer(); // Reinicia el temporizador para el nuevo nivel
+               // getActions().fetchImages(); // Recarga las imágenes para el nuevo nivel
+              //  getActions().resetTimer(); // Reinicia el temporizador para el nuevo nivel
             },
 
 
             // Calcula el puntaje en función del nivel y la cantidad de clics
             calculateScore: () => {
                 // const store = getStore();
-                // const passLevel = store.size * 10;
+                // const passLevel = store.level * 10;
                 // let total = store.score.current;
                 // const cards = store.size * 2;
 
