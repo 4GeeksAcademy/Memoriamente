@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Score
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -65,7 +65,7 @@ def login():
     access_token = create_access_token(identity=user.id)
     return jsonify(access_token=access_token, msg="Login exitoso"), 200
 
-
+# Registrar jugador
 @api.route("/signup", methods=["POST"])
 def signup():
     body = request.get_json()
@@ -95,6 +95,30 @@ def signup():
     db.session.commit()
 
     return jsonify({"msg": "Usuario creado exitosamente"}), 201
+
+#Tabla de Puntuacion
+
+@api.route('/api/scores', methods=['GET'])
+def get_scores():
+    scores = Score.query.order_by(Score.score.desc()).all()  # Ordenar por puntuación descendente
+    for index, score in enumerate(scores):
+        score.position = index + 1  # Actualiza la posición
+        db.session.commit()
+    return jsonify([score.serialize() for score in scores]), 200
+
+@api.route('/api/scores', methods=['POST'])
+def add_score():
+    data = request.json
+    new_score = Score(
+        user_id=data['user_id'],
+        name=data['name'],
+        time=data['time'],
+        score=data['score'],
+        level=data['level']
+    )
+    db.session.add(new_score)
+    db.session.commit()
+    return jsonify(new_score.serialize()), 201
 
 
 

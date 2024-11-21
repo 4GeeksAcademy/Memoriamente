@@ -42,11 +42,20 @@ const getState = ({ getStore, getActions, setStore }) => {
                         const updatedStore = getStore();
                         setStore({
                             ...updatedStore,
-                            time: updatedStore.time + 1 // Incrementa el tiempo cada segundo
+                            time: updatedStore.time + 1, // Incrementa el tiempo cada segundo
+                            
                         });
                     }, 1000);
                     setStore({ timerInterval: interval, timerRunning: true });
                 }
+            },
+
+            // Función para formatear el tiempo
+            formatTime: (timeInSeconds) => {
+                const minutes = Math.floor(timeInSeconds / 60); // Obtiene los minutos
+                const seconds = timeInSeconds % 60; // Obtiene los segundos restantes
+                // Formatea como mm:ss (añade ceros si son menores a 10)
+                return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             },
 
             pauseTimer: () => {
@@ -306,9 +315,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                         },
                         body: JSON.stringify({ password }) // Envía la nueva contraseña
                     });
-            
+
                     const data = await response.json();
-            
+
                     if (response.ok) {
                         return { success: true, msg: data.msg }; // Contraseña actualizada exitosamente
                     } else {
@@ -346,7 +355,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return { success: false, msg: "Hubo un error al enviar el correo." };
                 }
             },
-            
+
 
 
 

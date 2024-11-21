@@ -6,13 +6,13 @@ import questions from "../../img/questions-mark.png";
 
 export const Card = () => {
 
-       
+
     const { store, actions } = useContext(Context);
 
     // Estado local del componente:
-   // const [size, setSize] = useState(1);       
-    const [selected, setSelected] = useState([]); 
-    const [opened, setOpened] = useState([]);  
+    // const [size, setSize] = useState(1);       
+    const [selected, setSelected] = useState([]);
+    const [opened, setOpened] = useState([]);
 
     // useEffect que se ejecuta al inicio y cada vez que cambia el tamaño del nivel
     useEffect(() => {
@@ -40,12 +40,14 @@ export const Card = () => {
         }
     }, [selected]);
 
+
+
     // useEffect que detecta cuando todas las cartas se han abierto
     useEffect(() => {
         if (opened.length === store.images.length) { // Compara cartas abiertas con el total de cartas
             actions.stopTimer(); // Detiene el temporizador
             actions.calculateScore(); // Calcula el puntaje
-           // setSize((prevSize) => prevSize + 1); // Incrementa el nivel (aumenta el tamaño del juego)
+            // setSize((prevSize) => prevSize + 1); // Incrementa el nivel (aumenta el tamaño del juego)
             setOpened([]); // Resetea las cartas abiertas
             actions.fetchImages(); // Carga nuevas imágenes para el siguiente nivel
             actions.resetTimer(); // Reinicia el temporizador para el nuevo nivel
@@ -66,21 +68,30 @@ export const Card = () => {
     // Reinicia el Juego
     const handleResetGame = () => {
         actions.resetGame(); // Llama a la función para reiniciar el juego
-       // setSize(1); // Restablece el nivel localmente
+        // setSize(1); // Restablece el nivel localmente
         setSelected([]); // Reinicia las cartas seleccionadas
         setOpened([]); // Reinicia las cartas abiertas
     };
 
+    // Función para formatear el tiempo como mm:ss
+    const formatTime = (timeInSeconds) => {
+        const minutes = Math.floor(timeInSeconds / 60); // Obtiene los minutos
+        const seconds = timeInSeconds % 60; // Obtiene los segundos restantes
+        return `${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`; // Formatea como mm:ss
+    };
+
     let include = false;
 
-    
+
 
     return (
         <div className="container text-center my-4">
             <h2 className="score mb-4">Score: {store.score.current}</h2> {/* Muestra el puntaje actual */}
-            <h2 className="time mb-4">Tiempo: {store.time} segundos</h2> {/* Muestra el tiempo transcurrido */}
+            <h2 className="time mb-4">Tiempo: {formatTime(store.time)} </h2> {/* Muestra el tiempo transcurrido */}
             <h2 className="level mb-4">Level: {store.level} </h2> {/* Muestra el nivel actual */}
-            
+
 
             {/* Botón para iniciar el temporizador si no está corriendo */}
             {!store.timerRunning ? (
@@ -98,29 +109,29 @@ export const Card = () => {
                 Reiniciar Juego
             </button>
 
-            
+
             <div className="row justify-content-center">
-                
+
                 {/* Se trae las imagenes y las vuelve aleatorias */}
                 {store.images.map((item, index) => (
 
-                    <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2 p-2"> 
+                    <div key={index} className="col-6 col-sm-4 col-md-3 col-lg-2 p-2">
 
                         <div onClick={() => handleClick(item)} className="card-item">
 
                             <div className="content">
 
                                 {/* Si el par de cartas son iguales la carta se muestra */}
-                                {include = selected.includes(item) || opened.includes(item)} 
+                                {include = selected.includes(item) || opened.includes(item)}
 
-                                 {/* Imagen de carta oculta */}
+                                {/* Imagen de carta oculta */}
                                 <div className={`front ${include ? 'flip-front' : ''}`}>
                                     <img src={questions} alt="Question mark" className="img-fluid" />
                                 </div>
 
                                 {/* Imagen de carta revelada */}
                                 <div className={`back ${include ? 'flip-back' : ''}`}>
-                                    <img src={item.split('|')[1]} alt="Card content" className="img-fluid" /> 
+                                    <img src={item.split('|')[1]} alt="Card content" className="img-fluid" />
                                 </div>
                             </div>
                         </div>

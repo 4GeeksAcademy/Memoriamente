@@ -1,14 +1,23 @@
-import React from "react";
-import "../../styles/score.css"; // Asegúrate de crear este archivo de estilos
+import React, { useEffect, useState } from "react";
+import "../../styles/score.css";
 
 export const Score = () => {
-    // Datos de ejemplo para la tabla
-    const scores = [
-        { name: "Rick", score: 100, time: "2:30", level: "4" },
-        { name: "Morty", score: 80, time: "3:10", level: "3" },
-        { name: "Summer", score: 60, time: "5:15", level: "2" },
-        { name: "Jerry", score: 20, time: "10:00", level: "1" },
-    ];
+    const [scores, setScores] = useState([]);
+
+    useEffect(() => {
+        fetchScores();
+    }, []);
+
+    const fetchScores = async () => {
+        try {
+            const response = await fetch("https://your-api-url/api/scores");
+            if (!response.ok) throw new Error("Error fetching scores");
+            const data = await response.json();
+            setScores(data); // Actualiza el estado con los datos de la API
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div className="score-container">
@@ -16,6 +25,7 @@ export const Score = () => {
             <table className="score-table">
                 <thead>
                     <tr>
+                        <th>Posición</th>
                         <th>Nombre</th>
                         <th>Puntuación</th>
                         <th>Tiempo</th>
@@ -25,6 +35,7 @@ export const Score = () => {
                 <tbody>
                     {scores.map((player, index) => (
                         <tr key={index}>
+                            <td>{player.position}</td>
                             <td>{player.name}</td>
                             <td>{player.score}</td>
                             <td>{player.time}</td>
