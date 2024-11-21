@@ -34,9 +34,10 @@ export const Navbar = () => {
                     // Navbar personalizado para la vista del juego
                     <div className="game-navbar">
                         <p className="welcome-message">¡Bienvenid@ a la partida!</p>
-                        <Link to="/">
+                        <Link to="/" onClick={() => actions.logout()}>
                             <button className="btn btn-danger mx-2">Cerrar Sesión</button>
                         </Link>
+
                     </div>
                 )}
             </div>

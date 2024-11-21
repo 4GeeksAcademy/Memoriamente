@@ -109,16 +109,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 getActions().fetchImages();
             },
 
-            //Carga imágenes y las baraja
-            // fetchImages: async (size) => {
-            //     const images = [imagen1, imagen2, imagen3, imagen4, imagen5, imagen6, imagen7];
-            //     const selectedImages = images.slice(0, size);
-            //     const shuffledImages = selectedImages
-            //         .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
-            //         .sort(() => Math.random() - 0.5); // Mezcla las imágenes
-            //     setStore({ images: shuffledImages, size: size, clicks: 0 }); // Reinicia los clics al cargar nuevas imágenes
-            // },
-
+           //Trae las Imagenes de la Api y carga las cartas  
 
             fetchImages: async () => {
                 try {
@@ -145,34 +136,50 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
+            // Sube de nivel
             levelUp: () => {
                 const store = getStore();
                 setStore({ level: store.level + 1 });
-               // getActions().fetchImages(); // Recarga las imágenes para el nuevo nivel
-              //  getActions().resetTimer(); // Reinicia el temporizador para el nuevo nivel
+                             
             },
 
 
             // Calcula el puntaje en función del nivel y la cantidad de clics
             calculateScore: () => {
-                // const store = getStore();
-                // const passLevel = store.level * 10;
-                // let total = store.score.current;
-                // const cards = store.size * 2;
-
-
-                // if (store.clicks === cards) {
-                //     total += (cards * 2) + passLevel;
-                // } else if (store.clicks > cards && store.clicks < cards + 5) {
-                //     total += cards + passLevel;
-                // } else if (store.clicks > cards + 5 && store.clicks < cards + 10) {
-                //     total += cards / 2 + passLevel;
-                // } else {
-                //     total += Math.round(cards / 3) + passLevel;
-                // }
-
-                // setStore({ clicks: 0, score: { current: total }, time: 0 }); // Resetea clics y tiempo
+                const store = getStore();
+                
+                // Calcula el puntaje base para el nivel actual
+                const passLevelBonus = store.level * 10; 
+                const totalCards = store.images.length; // Total de cartas (ya duplicadas)
+                const uniqueCards = totalCards / 2; // Cartas únicas (sin duplicar)
+            
+                let totalScore = store.score.current;
+            
+                // Calcula el puntaje según la cantidad de clics realizados
+                if (store.clicks === totalCards) {
+                    // Caso perfecto: todos los pares en el mínimo de clics
+                    totalScore += (uniqueCards * 2) + passLevelBonus;
+                } else if (store.clicks > totalCards && store.clicks <= totalCards + 5) {
+                    // Caso bueno: algunos clics adicionales
+                    totalScore += uniqueCards + passLevelBonus;
+                } else if (store.clicks > totalCards + 5 && store.clicks <= totalCards + 10) {
+                    // Caso regular: varios clics adicionales
+                    totalScore += Math.floor(uniqueCards / 2) + passLevelBonus;
+                } else {
+                    // Caso malo: demasiados clics
+                    totalScore += Math.floor(uniqueCards / 3) + passLevelBonus;
+                }
+            
+                // Actualiza el `store` con el nuevo puntaje, reinicia clics y tiempo
+                setStore({
+                    score: { current: totalScore },
+                    clicks: 0,
+                    time: 0,
+                });
+            
+                console.log("Puntaje calculado:", totalScore); // Mensaje para depuración
             },
+            
 
             // Actualiza la cantidad de clics
             setClicks: (newClicks) => {
@@ -182,7 +189,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
             // DESDE AQUI COMIENZA EL BACKEND
 
-            signup: async (name, lastname, seudonimo, email, password) => {
+            signup: async (name, lastname, email, password) => {
 
                 const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/signup', {
                     method: 'POST',
@@ -190,7 +197,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                     body: JSON.stringify({
                         name: name,
                         lastname: lastname,
-                        seudonimo: seudonimo,
                         email: email,
                         password: password,
                         is_active: true
@@ -213,41 +219,42 @@ const getState = ({ getStore, getActions, setStore }) => {
             // Método para iniciar sesión
             login: async (email, password) => {
                 try {
-                    // Realiza una solicitud a la API de login
                     const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/login', {
-                        method: 'POST', // Método HTTP para enviar datos
-                        headers: {
-                            'Content-Type': 'application/json' // Indica que el cuerpo de la solicitud es JSON
-                        },
-                        body: JSON.stringify({ email, password }) // Convierte el email y password a un formato JSON
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, password }),
                     });
-
-                    // Si la respuesta no es satisfactoria (status !== 2xx)
+            
                     if (!response.ok) {
-                        const errorData = await response.json(); // Intenta obtener el mensaje de error del servidor
-                        throw new Error(errorData.msg || 'Error en el login'); // Lanza un error con el mensaje recibido o un mensaje genérico
+                        const errorData = await response.json();
+                        throw new Error(errorData.msg || 'Error en el login');
                     }
-
-                    // Si la solicitud fue exitosa, extrae los datos de la respuesta
+            
                     const data = await response.json();
-
-                    // Almacena el token de acceso en el localStorage
+            
+                    // Guarda el token de acceso
                     localStorage.setItem("token", data.access_token);
-
-                    // Cambia el estado global de la aplicación para indicar que el usuario está autenticado
-                    setStore({ auth: true });
-
-                    return true; // Devuelve true indicando que el login fue exitoso
+            
+                    // Reinicia el juego al estado inicial (nivel 1, puntuación 0, etc.)
+                    setStore({
+                        auth: true,
+                        images: [], // Reinicia las cartas
+                        score: { current: 0 }, // Reinicia puntuación
+                        clicks: 0, // Reinicia clics
+                        level: 1, // Nivel inicial
+                        time: 0, // Tiempo inicial
+                        timerInterval: null,
+                        timerRunning: false,
+                    });
+            
+                    return true; // Login exitoso
                 } catch (error) {
-                    console.error("Error en login:", error); // Muestra el error en la consola para depuración
-
-                    // Asegura que el estado de autenticación sea false si ocurre algún error
+                    console.error("Error en login:", error);
                     setStore({ auth: false });
-
-                    // Lanza el error para que pueda ser manejado fuera de esta función
                     throw error;
                 }
             },
+            
 
             // Método para autenticar al usuario mediante el token
             autentificar: async () => {
@@ -298,10 +305,23 @@ const getState = ({ getStore, getActions, setStore }) => {
             logout: () => {
                 // Elimina el token almacenado en localStorage
                 localStorage.removeItem("token");
-
-                // Actualiza el estado global indicando que el usuario no está autenticado
-                setStore({ auth: false });
+            
+                // Reinicia el estado global al estado inicial
+                setStore({
+                    auth: false, // Usuario no autenticado
+                    images: [], // Reiniciar las cartas
+                    score: { current: 0 }, // Reiniciar puntuación
+                    clicks: 0, // Reiniciar clics
+                    level: 1, // Regresar al nivel inicial
+                    time: 0, // Reiniciar el temporizador
+                    timerInterval: null,
+                    timerRunning: false,
+                });
+            
+                // Opcional: Muestra un mensaje de cierre de sesión exitoso
+                console.log("Sesión cerrada. Progreso reiniciado.");
             },
+            
 
             //Restablecer Contraseña
             resetPassword: async (password, token) => {

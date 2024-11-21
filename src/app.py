@@ -54,7 +54,7 @@ def forgot_password():
         return jsonify({"msg":"Email not found"}), 404
     
      # Generar un token de acceso con una expiración de 5 minutos
-    token=create_access_token(identity=user.id,expires_delta=timedelta(minutes=5))
+    token=create_access_token(identity=user.id,expires_delta=timedelta(minutes=20))
 
 
      # Crear el contenido del correo electrónico

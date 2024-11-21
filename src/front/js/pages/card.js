@@ -46,6 +46,13 @@ export const Card = () => {
         }
     }, [opened, store.images.length]);
 
+    useEffect(() => {
+        // Asegúrate de que el nivel esté en 1 al cargar
+        if (store.level !== 1) {
+            actions.resetGame(); // Reinicia el juego si no está en el nivel inicial
+        }
+    }, []);
+
     // Función para pasar al siguiente nivel desde el modal
     const handleNextLevel = () => {
         setShowModal(false); // Cierra el modal

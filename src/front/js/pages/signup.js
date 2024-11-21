@@ -6,7 +6,6 @@ import "../../styles/auth.css"; // Importar estilos
 const Signup = () => {
     const [name, setName] = useState("");
     const [lastname, setLastname] = useState("");
-    const [seudonimo, setSeudonimo] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const { actions } = useContext(Context);
@@ -15,10 +14,9 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await actions.signup(name, lastname, seudonimo, email, password);
+            await actions.signup(name, lastname, email, password);
             setName("");
             setLastname("");
-            setSeudonimo("");
             setEmail("");
             setPassword("");
             navigate("/login");
@@ -53,17 +51,7 @@ const Signup = () => {
                         required
                     />
                 </div>
-                <div className="mb-3">
-                    <label className="form-label">Seudónimo</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        value={seudonimo}
-                        onChange={(e) => setSeudonimo(e.target.value)}
-                        placeholder="Seudónimo"
-                        required
-                    />
-                </div>
+                
                 <div className="mb-3">
                     <label className="form-label">Correo Electrónico</label>
                     <input

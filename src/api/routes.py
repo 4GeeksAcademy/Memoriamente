@@ -71,7 +71,7 @@ def signup():
     body = request.get_json()
 
     # Verificar si falta algún campo
-    if not all(key in body for key in ["name", "lastname", "seudonimo", "email", "password"]):
+    if not all(key in body for key in ["name", "lastname", "email", "password"]):
         return jsonify({"msg": "Faltan datos en el registro"}), 400
 
     # Verificar si ya existe un usuario con el mismo email
@@ -86,7 +86,6 @@ def signup():
     user = User(
         name=body["name"],
         lastname=body["lastname"],
-        seudonimo=body["seudonimo"],
         email=body["email"],
         password=hashed_password,
         is_active=True,
