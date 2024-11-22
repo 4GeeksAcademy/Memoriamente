@@ -2,6 +2,8 @@ import React, { useEffect, useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/card.css";
 import questions from "../../img/questions-mark.png";
+import { useNavigate } from "react-router-dom";
+
 
 export const Card = () => {
     const { store, actions } = useContext(Context);
@@ -10,6 +12,12 @@ export const Card = () => {
     const [selected, setSelected] = useState([]);
     const [opened, setOpened] = useState([]);
     const [showModal, setShowModal] = useState(false); // Controla la visibilidad del modal
+
+    const navigate = useNavigate();
+
+    const handleNavigateToScores = () => {
+        navigate("/score");
+    };
 
     // useEffect que se ejecuta al inicio
     useEffect(() => {
@@ -39,14 +47,28 @@ export const Card = () => {
     useEffect(() => {
         if (opened.length === store.images.length && store.images.length > 0) {
             actions.pauseTimer(); // Pausa el temporizador al completar el nivel
-            
             actions.calculateScore();
+            setShowModal(true);   // Mostrar modal después de ganar
+
+            // Crear los datos para enviar al servidor TABLA DE PUNTUACION
+            const playerData = {
+                user_id: store.user_id || null, // Si el jugador está autenticado
+                name: store.user_name || "Anónimo",
+                score: store.score.current,
+                time: formatTime(store.time), // Formatear tiempo a "mm:ss"
+                level: store.level,
+            };
+
+            // Llamar a la función para guardar los datos en el servidor
+            actions.saveScore(playerData);
 
             // Mostrar modal después de ganar
             setShowModal(true);
         }
-       
     }, [opened, store.images.length]);
+
+
+
 
     useEffect(() => {
         // Asegúrate de que el nivel esté en 1 al cargar
@@ -91,7 +113,7 @@ export const Card = () => {
 
             {!store.timerRunning ? (
                 <button onClick={() => actions.startTimer()} className="btn btn-primary mb-3">
-                   {store.time === 0 ? "Iniciar Tiempo" : "Continuar Tiempo"}
+                    {store.time === 0 ? "Iniciar Tiempo" : "Continuar Tiempo"}
                 </button>
             ) : (
                 <button onClick={() => actions.pauseTimer()} className="btn btn-warning mb-3">
@@ -121,22 +143,30 @@ export const Card = () => {
                 ))}
             </div>
 
+            <button
+               onClick={handleNavigateToScores}
+                className="btn btn-info mb-3 ms-2"
+            >
+                Tabla de Puntuaciones
+            </button>
+
+
             {/* Modal para mostrar el mensaje de victoria */}
             {showModal && (
-               <div className="modal-overlay">
-               <div className="modal-content rick-and-morty">
-                   <h2>¡Wubba Lubba Dub-Dub! 🎉</h2>
-                   <p>
-                       ¡Felicidades, humano! Morty, escucha esto... ¡PASASTE DE NIVEL! No la arruines en el próximo, ¿ok?
-                   </p>
-                   <button onClick={handleNextLevel} className="btn btn-success">
-                       ¡Siguiente Nivel, vamos ya!
-                   </button>
-                   <button onClick={() => setShowModal(false)} className="btn btn-secondary">
-                       Meh... Cerrar
-                   </button>
-               </div>
-           </div>
+                <div className="modal-overlay">
+                    <div className="modal-content rick-and-morty">
+                        <h2>¡Wubba Lubba Dub-Dub! 🎉</h2>
+                        <p>
+                            ¡Felicidades, humano! Morty, escucha esto... ¡PASASTE DE NIVEL! No la arruines en el próximo, ¿ok?
+                        </p>
+                        <button onClick={handleNextLevel} className="btn btn-success">
+                            ¡Siguiente Nivel, vamos ya!
+                        </button>
+                        <button onClick={() => setShowModal(false)} className="btn btn-secondary">
+                            Meh... Cerrar
+                        </button>
+                    </div>
+                </div>
             )}
         </div>
     );

@@ -26,7 +26,7 @@ class User(db.Model):
     
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Relación con el usuario
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # Relación con el usuario
     name = db.Column(db.String(120), nullable=False) 
     time = db.Column(db.String(50), nullable=False)  
     score = db.Column(db.Integer, nullable=False)  
