@@ -14,8 +14,8 @@ export const Card = () => {
     // useEffect que se ejecuta al inicio
     useEffect(() => {
         actions.fetchImages(); // Carga nuevas imágenes según el nivel
-        actions.resetTimer(); // Reinicia el temporizador al iniciar el nivel
-    }, []);
+        actions.pauseTimer(); // Reinicia el temporizador al iniciar el nivel
+    }, [store.level]);
 
     // Manejador de eventos para el clic en una carta
     const handleClick = (item) => {
@@ -38,12 +38,14 @@ export const Card = () => {
     // useEffect que detecta cuando todas las cartas se han abierto
     useEffect(() => {
         if (opened.length === store.images.length && store.images.length > 0) {
-            actions.stopTimer();
+            actions.pauseTimer(); // Pausa el temporizador al completar el nivel
+            
             actions.calculateScore();
 
             // Mostrar modal después de ganar
             setShowModal(true);
         }
+       
     }, [opened, store.images.length]);
 
     useEffect(() => {
@@ -59,7 +61,7 @@ export const Card = () => {
         actions.levelUp(); // Incrementa el nivel
         setOpened([]); // Reinicia las cartas abiertas
         actions.fetchImages(); // Carga nuevas imágenes
-        actions.resetTimer(); // Reinicia el temporizador
+        actions.pauseTimer(); // Pausa el temporizador al iniciar el nuevo nivel
     };
 
     // Reinicia el Juego
@@ -89,7 +91,7 @@ export const Card = () => {
 
             {!store.timerRunning ? (
                 <button onClick={() => actions.startTimer()} className="btn btn-primary mb-3">
-                    Iniciar Tiempo
+                   {store.time === 0 ? "Iniciar Tiempo" : "Continuar Tiempo"}
                 </button>
             ) : (
                 <button onClick={() => actions.pauseTimer()} className="btn btn-warning mb-3">

@@ -45,6 +45,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                             time: updatedStore.time + 1, // Incrementa el tiempo cada segundo
                             
                         });
+
+                        //console.log("Tiempo incrementado:", updatedStore.time); // DEBUG
+
                     }, 1000);
                     setStore({ timerInterval: interval, timerRunning: true });
                 }
@@ -57,6 +60,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                 // Formatea como mm:ss (añade ceros si son menores a 10)
                 return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             },
+
+             // Pausa el temporizador
 
             pauseTimer: () => {
                 const store = getStore();
@@ -114,9 +119,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             fetchImages: async () => {
                 try {
                     const store = getStore();
-                    // Asegúrate de que el número de imágenes dependa del nivel correctamente
-                    const size = store.level + 4; // Empezamos con 5 imágenes en el primer nivel
 
+                   // console.log("Tiempo actual antes de fetchImages:", store.time); // DEBUG
+
+                   
                     const response = await fetch(`https://rickandmortyapi.com/api/character`);
                     const data = await response.json();
 
@@ -139,6 +145,9 @@ const getState = ({ getStore, getActions, setStore }) => {
             // Sube de nivel
             levelUp: () => {
                 const store = getStore();
+
+               // console.log("Tiempo actual antes de levelUp:", store.time); // DEBUG    
+
                 setStore({ level: store.level + 1 });
                              
             },
@@ -173,11 +182,11 @@ const getState = ({ getStore, getActions, setStore }) => {
                 // Actualiza el `store` con el nuevo puntaje, reinicia clics y tiempo
                 setStore({
                     score: { current: totalScore },
-                    clicks: 0,
-                    time: 0,
+                    clicks: 0
+                    
                 });
             
-                console.log("Puntaje calculado:", totalScore); // Mensaje para depuración
+                
             },
             
 
