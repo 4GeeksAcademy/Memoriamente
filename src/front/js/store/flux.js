@@ -34,36 +34,6 @@ const getState = ({ getStore, getActions, setStore }) => {
                 // }
             },
 
-            
-            //Trae las Imagenes de la Api y carga las cartas  
-
-            fetchImages: async () => {
-                try {
-                    const store = getStore();
-
-                    // console.log("Tiempo actual antes de fetchImages:", store.time); // DEBUG
-
-
-                    const response = await fetch(`https://rickandmortyapi.com/api/character`);
-                    const data = await response.json();
-
-                    // Seleccionamos el número de imágenes acorde al nivel
-                    const images = data.results.slice(0, store.level).map((item) => item.image);
-
-                    // Duplica y mezcla aleatoriamente las imágenes
-                    const shuffledImages = images
-                        .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
-                        .sort(() => Math.random() - 0.5); // Mezcla las imágenes
-
-                    // Actualiza el estado con las nuevas imágenes y reinicia los clics
-                    setStore({ images: shuffledImages, clicks: 0 });
-                    return data;
-                } catch (error) {
-                    console.error("Error al cargar las imágenes desde la API:", error);
-                }
-            },
-
-
             // Inicia el temporizador
             startTimer: () => {
                 const store = getStore();
@@ -73,7 +43,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         setStore({
                             ...updatedStore,
                             time: updatedStore.time + 1, // Incrementa el tiempo cada segundo
-
+                            
                         });
 
                         //console.log("Tiempo incrementado:", updatedStore.time); // DEBUG
@@ -91,7 +61,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             },
 
-            // Pausa el temporizador
+             // Pausa el temporizador
 
             pauseTimer: () => {
                 const store = getStore();
@@ -144,28 +114,56 @@ const getState = ({ getStore, getActions, setStore }) => {
                 getActions().fetchImages();
             },
 
+           //Trae las Imagenes de la Api y carga las cartas  
+
+            fetchImages: async () => {
+                try {
+                    const store = getStore();
+
+                   // console.log("Tiempo actual antes de fetchImages:", store.time); // DEBUG
+
+                   
+                    const response = await fetch(`https://rickandmortyapi.com/api/character`);
+                    const data = await response.json();
+
+                    // Seleccionamos el número de imágenes acorde al nivel
+                    const images = data.results.slice(0, store.level).map((item) => item.image);
+
+                    // Duplica y mezcla aleatoriamente las imágenes
+                    const shuffledImages = images
+                        .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
+                        .sort(() => Math.random() - 0.5); // Mezcla las imágenes
+
+                    // Actualiza el estado con las nuevas imágenes y reinicia los clics
+                    setStore({ images: shuffledImages, clicks: 0 });
+                    return data;
+                } catch (error) {
+                    console.error("Error al cargar las imágenes desde la API:", error);
+                }
+            },
+
             // Sube de nivel
             levelUp: () => {
                 const store = getStore();
 
-                // console.log("Tiempo actual antes de levelUp:", store.time); // DEBUG    
+               // console.log("Tiempo actual antes de levelUp:", store.time); // DEBUG    
 
                 setStore({ level: store.level + 1 });
-
+                             
             },
 
 
             // Calcula el puntaje en función del nivel y la cantidad de clics
             calculateScore: () => {
                 const store = getStore();
-
+                
                 // Calcula el puntaje base para el nivel actual
-                const passLevelBonus = store.level * 10;
+                const passLevelBonus = store.level * 10; 
                 const totalCards = store.images.length; // Total de cartas (ya duplicadas)
                 const uniqueCards = totalCards / 2; // Cartas únicas (sin duplicar)
-
+            
                 let totalScore = store.score.current;
-
+            
                 // Calcula el puntaje según la cantidad de clics realizados
                 if (store.clicks === totalCards) {
                     // Caso perfecto: todos los pares en el mínimo de clics
@@ -180,23 +178,23 @@ const getState = ({ getStore, getActions, setStore }) => {
                     // Caso malo: demasiados clics
                     totalScore += Math.floor(uniqueCards / 3) + passLevelBonus;
                 }
-
+            
                 // Actualiza el `store` con el nuevo puntaje, reinicia clics y tiempo
                 setStore({
                     score: { current: totalScore },
                     clicks: 0
-
+                    
                 });
-
-
+            
+                
             },
 
-
+            
             //Tabla de Puntuacion
             saveScore: async (playerData) => {
                 try {
                     console.log("Datos que se enviarán al servidor:", playerData); // <-- Agrega esto
-                    const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/score', {
+                    const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/scores', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -204,16 +202,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                         },
                         body: JSON.stringify(playerData),
                     });
-
+            
                     if (!response.ok) throw new Error("Error al guardar la puntuación");
-
+            
                     const data = await response.json();
                     console.log("Puntuación guardada con éxito:", data);
                 } catch (error) {
                     console.error("Error al guardar la puntuación:", error);
                 }
             },
-
+            
 
 
 
@@ -261,16 +259,18 @@ const getState = ({ getStore, getActions, setStore }) => {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ email, password }),
                     });
-
+            
                     if (!response.ok) {
                         const errorData = await response.json();
                         throw new Error(errorData.msg || 'Error en el login');
                     }
-
+            
                     const data = await response.json();
-
-                    // Guarda el token y el nombre del usuario
+            
+                    // Guarda el token de acceso
                     localStorage.setItem("token", data.access_token);
+            
+                    // Reinicia el juego al estado inicial (nivel 1, puntuación 0, etc.)
                     setStore({
                         auth: true,
                         user_name: data.user_name, // <-- Guarda el nombre del usuario
@@ -282,7 +282,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         timerInterval: null,
                         timerRunning: false,
                     });
-
+            
                     return true; // Login exitoso
                 } catch (error) {
                     console.error("Error en login:", error);
@@ -290,7 +290,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     throw error;
                 }
             },
-
+            
 
             // Método para autenticar al usuario mediante el token
             autentificar: async () => {
@@ -341,7 +341,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             logout: () => {
                 // Elimina el token almacenado en localStorage
                 localStorage.removeItem("token");
-
+            
                 // Reinicia el estado global al estado inicial
                 setStore({
                     auth: false, // Usuario no autenticado
@@ -353,11 +353,11 @@ const getState = ({ getStore, getActions, setStore }) => {
                     timerInterval: null,
                     timerRunning: false,
                 });
-
+            
                 // Opcional: Muestra un mensaje de cierre de sesión exitoso
                 console.log("Sesión cerrada. Progreso reiniciado.");
             },
-
+            
 
             //Restablecer Contraseña
             resetPassword: async (password, token) => {

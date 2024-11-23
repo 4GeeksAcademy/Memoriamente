@@ -48,14 +48,14 @@ export const Card = () => {
         if (opened.length === store.images.length && store.images.length > 0) {
             actions.pauseTimer(); // Pausa el temporizador al completar el nivel
             actions.calculateScore();
-            setShowModal(true);   // Mostrar modal después de ganar
+            
 
             // Crear los datos para enviar al servidor TABLA DE PUNTUACION
             const playerData = {
                 user_id: store.user_id || null, // Si el jugador está autenticado
                 name: store.user_name || "Anónimo",
                 score: store.score.current,
-                time: formatTime(store.time), // Formatear tiempo a "mm:ss"
+                time: formatTime(store.time), // <-- Formatear tiempo aquí
                 level: store.level,
             };
 
@@ -94,14 +94,27 @@ export const Card = () => {
         setShowModal(false); // Cierra el modal si estaba abierto
     };
 
-    // Formatea el tiempo como mm:ss
+    // Función para formatear el tiempo como h:m:s
     const formatTime = (timeInSeconds) => {
-        const minutes = Math.floor(timeInSeconds / 60);
-        const seconds = timeInSeconds % 60;
-        return `${minutes.toString().padStart(2, "0")}:${seconds
-            .toString()
-            .padStart(2, "0")}`;
+        const hours = Math.floor(timeInSeconds / 3600); // Calcula las horas
+        const minutes = Math.floor((timeInSeconds % 3600) / 60); // Calcula los minutos restantes
+        const seconds = timeInSeconds % 60; // Obtiene los segundos restantes
+
+        return `${hours.toString()}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
     };
+
+
+    // Reemplaza el valor de tiempo en los datos de puntuación
+    const playerData = {
+        user_id: store.user_id || null, // Si el jugador está autenticado
+        name: store.user_name || "Anónimo",
+        score: store.score.current,
+        time: formatTime(store.time), // Formatear tiempo como "h:m:s"
+        level: store.level,
+    };
+    
+
+
 
     let include = false;
 
@@ -144,10 +157,10 @@ export const Card = () => {
             </div>
 
             <button
-               onClick={handleNavigateToScores}
+                onClick={handleNavigateToScores}
                 className="btn btn-info mb-3 ms-2"
             >
-                Tabla de Puntuaciones
+                Ir Tabla de Puntuaciones
             </button>
 
 

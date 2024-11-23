@@ -50,21 +50,24 @@ def login():
     email = request.json.get("email")
     password = request.json.get("password")
 
+    # Verificar que se proporcionaron los campos
     if not email or not password:
         return jsonify({"msg": "Faltan datos"}), 400
 
+    # Buscar al usuario por email
     user = User.query.filter_by(email=email).first()
+
+    # Validar si el usuario existe y la contraseña es correcta
     if not user or not check_password_hash(user.password, password):
         return jsonify({"msg": "Email o contraseña incorrectos"}), 401
 
+    # Crear el token
     access_token = create_access_token(identity=user.id)
-
     return jsonify({
         "access_token": access_token,
         "msg": "Login exitoso",
         "user_name": user.name  # <-- Incluye el nombre del usuario
     }), 200
-
 
 # Registrar jugador
 @api.route("/signup", methods=["POST"])
@@ -98,7 +101,7 @@ def signup():
 
 #Tabla de Puntuacion
 
-@api.route('/score', methods=['GET'])
+@api.route('/scores', methods=['GET'])
 def get_scores():
     scores = Score.query.order_by(Score.score.desc()).all()  # Ordenar por puntuación descendente
     for index, score in enumerate(scores):
@@ -106,7 +109,7 @@ def get_scores():
         db.session.commit()
     return jsonify([score.serialize() for score in scores]), 200
 
-@api.route('/score', methods=['POST'])
+@api.route('/scores', methods=['POST'])
 def add_score():
     data = request.json
 
@@ -129,6 +132,10 @@ def add_score():
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": "Error al guardar la puntuación", "error": str(e)}), 500
+
+
+
+
     
 #Private Pagina
 @api.route("/demo", methods=["GET"])
