@@ -10,7 +10,7 @@ export const Score = () => {
 
     const fetchScores = async () => {
         try {
-            const response = await fetch(`${process.env.BACKEND_URL}api/scores`);
+            const response = await fetch(`${process.env.BACKEND_URL}api/score`);
             if (!response.ok) throw new Error("Error fetching scores");
             const data = await response.json();
             setScores(data); // Actualiza el estado con los datos de la API

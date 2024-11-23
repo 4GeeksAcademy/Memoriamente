@@ -101,7 +101,7 @@ def signup():
 
 #Tabla de Puntuacion
 
-@api.route('/scores', methods=['GET'])
+@api.route('/score', methods=['GET'])
 def get_scores():
     scores = Score.query.order_by(Score.score.desc()).all()  # Ordenar por puntuación descendente
     for index, score in enumerate(scores):
@@ -109,7 +109,7 @@ def get_scores():
         db.session.commit()
     return jsonify([score.serialize() for score in scores]), 200
 
-@api.route('/scores', methods=['POST'])
+@api.route('/score', methods=['POST'])
 def add_score():
     data = request.json
 

@@ -194,7 +194,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             saveScore: async (playerData) => {
                 try {
                     console.log("Datos que se enviarán al servidor:", playerData); // <-- Agrega esto
-                    const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/scores', {
+                    const response = await fetch('https://improved-space-fortnight-7vv9rvwq6x9gfpx4-3001.app.github.dev/api/score', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
