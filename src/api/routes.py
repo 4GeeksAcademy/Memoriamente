@@ -103,11 +103,27 @@ def signup():
 
 @api.route('/score', methods=['GET'])
 def get_scores():
-    scores = Score.query.order_by(Score.score.desc()).all()  # Ordenar por puntuación descendente
-    for index, score in enumerate(scores):
-        score.position = index + 1  # Actualiza la posición
-        db.session.commit()
-    return jsonify([score.serialize() for score in scores]), 200
+    last = request.args.get('last', default=False, type=bool)  # Obtén el parámetro 'last'
+
+    try:
+        if last:
+            # Si 'last' es True, devolver solo el último registro
+            last_score = Score.query.order_by(Score.id.desc()).first()  # Ordenar por ID descendente y tomar el primero
+            if not last_score:
+                return jsonify({"msg": "No hay puntuaciones registradas"}), 404
+            return jsonify(last_score.serialize()), 200
+
+        # Si no se pasa 'last', devolver todas las puntuaciones
+        scores = Score.query.order_by(Score.score.desc()).all()  # Ordenar por puntuación descendente
+        for index, score in enumerate(scores):
+            score.position = index + 1  # Actualiza la posición
+            db.session.commit()
+
+        return jsonify([score.serialize() for score in scores]), 200
+
+    except Exception as e:
+        return jsonify({"msg": "Error al obtener puntuaciones", "error": str(e)}), 500
+
 
 @api.route('/score', methods=['POST'])
 def add_score():

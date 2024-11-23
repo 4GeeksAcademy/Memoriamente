@@ -34,6 +34,34 @@ const getState = ({ getStore, getActions, setStore }) => {
                 // }
             },
 
+            //Trae las Imagenes de la Api y carga las cartas  
+
+            fetchImages: async () => {
+                try {
+                    const store = getStore();
+
+                   // console.log("Tiempo actual antes de fetchImages:", store.time); // DEBUG
+
+                   
+                    const response = await fetch(`https://rickandmortyapi.com/api/character`);
+                    const data = await response.json();
+
+                    // Seleccionamos el número de imágenes acorde al nivel
+                    const images = data.results.slice(0, store.level).map((item) => item.image);
+
+                    // Duplica y mezcla aleatoriamente las imágenes
+                    const shuffledImages = images
+                        .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
+                        .sort(() => Math.random() - 0.5); // Mezcla las imágenes
+
+                    // Actualiza el estado con las nuevas imágenes y reinicia los clics
+                    setStore({ images: shuffledImages, clicks: 0 });
+                    return data;
+                } catch (error) {
+                    console.error("Error al cargar las imágenes desde la API:", error);
+                }
+            },
+
             // Inicia el temporizador
             startTimer: () => {
                 const store = getStore();
@@ -114,33 +142,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 getActions().fetchImages();
             },
 
-           //Trae las Imagenes de la Api y carga las cartas  
-
-            fetchImages: async () => {
-                try {
-                    const store = getStore();
-
-                   // console.log("Tiempo actual antes de fetchImages:", store.time); // DEBUG
-
-                   
-                    const response = await fetch(`https://rickandmortyapi.com/api/character`);
-                    const data = await response.json();
-
-                    // Seleccionamos el número de imágenes acorde al nivel
-                    const images = data.results.slice(0, store.level).map((item) => item.image);
-
-                    // Duplica y mezcla aleatoriamente las imágenes
-                    const shuffledImages = images
-                        .flatMap((item) => [`1|${item}`, `2|${item}`]) // Duplica cada imagen
-                        .sort(() => Math.random() - 0.5); // Mezcla las imágenes
-
-                    // Actualiza el estado con las nuevas imágenes y reinicia los clics
-                    setStore({ images: shuffledImages, clicks: 0 });
-                    return data;
-                } catch (error) {
-                    console.error("Error al cargar las imágenes desde la API:", error);
-                }
-            },
+           
 
             // Sube de nivel
             levelUp: () => {

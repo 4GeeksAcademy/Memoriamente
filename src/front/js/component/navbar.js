@@ -6,8 +6,9 @@ import rickAndMortyLogo from "../../img/rick-and-morty-logo.png";
 export const Navbar = () => {
     const location = useLocation(); // Obtiene la ruta actual
 
-    // Detectar si estás en la vista del juego
-    const isGameView = location.pathname === "/demo"; // Cambia "/game" por la ruta de tu vista de juego
+    // Comprobar si estamos en la vista de puntuaciones (score) o en el inicio del juego (demo)
+    const isScoreView = location.pathname === "/score";
+    const isGameView = location.pathname === "/demo";
 
     return (
         <nav className={`navbar navbar-light ${isGameView ? "navbar-game" : ""}`}>
@@ -20,7 +21,25 @@ export const Navbar = () => {
                     />
                 </Link>
 
-                {!isGameView ? (
+                {isScoreView ? (
+                    // Navbar personalizado para la vista de puntuaciones
+                    <div className="score-navbar">
+                        <button
+                            onClick={() => window.location.href = '/demo'} // Redirige a /demo (inicio del juego)
+                            className="btn btn-primary mx-2"
+                        >
+                            Ir al Inicio del Juego
+                        </button>
+                    </div>
+                ) : isGameView ? (
+                    // Navbar personalizado para la vista del juego
+                    <div className="game-navbar">
+                        <p className="welcome-message">¡Bienvenid@ a la partida!</p>
+                        <Link to="/" onClick={() => actions.logout()}>
+                            <button className="btn btn-danger mx-2">Cerrar Sesión</button>
+                        </Link>
+                    </div>
+                ) : (
                     // Navbar estándar para otras vistas
                     <div className="buttons-container">
                         <Link to="/login">
@@ -29,15 +48,6 @@ export const Navbar = () => {
                         <Link to="/signup">
                             <button className="btn btn-warning mx-2">Registro</button>
                         </Link>
-                    </div>
-                ) : (
-                    // Navbar personalizado para la vista del juego
-                    <div className="game-navbar">
-                        <p className="welcome-message">¡Bienvenid@ a la partida!</p>
-                        <Link to="/" onClick={() => actions.logout()}>
-                            <button className="btn btn-danger mx-2">Cerrar Sesión</button>
-                        </Link>
-
                     </div>
                 )}
             </div>
