@@ -20,7 +20,6 @@ export const Score = () => {
             console.error(error); 
         }
     };
-
     
 
     return (

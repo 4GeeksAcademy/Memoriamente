@@ -26,6 +26,8 @@ const Layout = () => {
 
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
+    
+
     return (
         <div>  
             <BrowserRouter basename={basename}>

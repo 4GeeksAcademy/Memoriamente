@@ -124,27 +124,41 @@ def get_scores():
     except Exception as e:
         return jsonify({"msg": "Error al obtener puntuaciones", "error": str(e)}), 500
 
-
 @api.route('/score', methods=['POST'])
-def add_score():
+def add_or_update_score():
     data = request.json
 
     # Validar los datos de entrada
-    if not data.get('name') or not data.get('score') or not data.get('time') or not data.get('level'):
+    if not data.get('name') or not data.get('score') or not data.get('time'):
         return jsonify({"msg": "Datos incompletos"}), 400
 
     try:
-        new_score = Score(
-            user_id=data.get('user_id'),
-            name=data['name'],
-            score=data['score'],
-            time=data['time'],
-            level=data['level']
-        )
-        db.session.add(new_score)
-        db.session.commit()
+        # Buscar si ya existe un registro de puntuación para este usuario
+        existing_score = Score.query.filter_by(user_id=data.get('user_id')).first()
 
-        return jsonify(new_score.serialize()), 201
+        if existing_score:
+            # Si el nuevo puntaje es mayor, actualizamos el registro
+            if data['score'] > existing_score.score:
+                existing_score.score = data['score']
+                existing_score.time = data['time']
+                existing_score.level = data['level']
+                db.session.commit()
+                return jsonify({"msg": "Puntuación actualizada", "score": existing_score.serialize()}), 200
+            else:
+                return jsonify({"msg": "El puntaje no supera al existente"}), 200
+        else:
+            # Si no existe un registro previo, creamos uno nuevo
+            new_score = Score(
+                user_id=data.get('user_id'),
+                name=data['name'],
+                score=data['score'],
+                time=data['time'],
+                level=data['level']
+            )
+            db.session.add(new_score)
+            db.session.commit()
+            return jsonify({"msg": "Puntuación registrada", "score": new_score.serialize()}), 201
+
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": "Error al guardar la puntuación", "error": str(e)}), 500

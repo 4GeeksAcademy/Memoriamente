@@ -7,6 +7,7 @@ export const Navbar = () => {
     const location = useLocation(); // Obtiene la ruta actual
     const [userName, setUserName] = useState("");
 
+
     useEffect(() => {
         const storedUserName = localStorage.getItem("user_name"); // Recupera el nombre del usuario desde el localStorage
         if (storedUserName) {

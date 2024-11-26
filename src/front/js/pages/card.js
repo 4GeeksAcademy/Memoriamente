@@ -19,6 +19,9 @@ export const Card = () => {
         navigate("/score");
     };
 
+    
+    
+
     // useEffect que se ejecuta al inicio
     useEffect(() => {
         actions.fetchImages(); // Carga nuevas imágenes según el nivel
@@ -67,9 +70,6 @@ export const Card = () => {
         }
     }, [opened, store.images.length]);
 
-
-
-
     useEffect(() => {
         // Asegúrate de que el nivel esté en 1 al cargar
         if (store.level !== 1) {
@@ -113,9 +113,6 @@ export const Card = () => {
         level: store.level,
     };
     
-
-
-
     let include = false;
 
     return (
