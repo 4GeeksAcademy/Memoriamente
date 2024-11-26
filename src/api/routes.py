@@ -140,6 +140,7 @@ def add_or_update_score():
             # Si el nuevo puntaje es mayor, actualizamos el registro
             if data['score'] > existing_score.score:
                 existing_score.score = data['score']
+                existing_score.name = data['name']
                 existing_score.time = data['time']
                 existing_score.level = data['level']
                 db.session.commit()

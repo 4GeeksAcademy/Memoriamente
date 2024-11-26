@@ -24,7 +24,7 @@ export const Score = () => {
 
     return (
         <div className="score-container">
-            <h1 className="score-title">Tabla de Puntuaciones</h1>
+            <h1 className="score-title">🏆Tabla de Puntuaciones🏆</h1>
                       
             <table className="score-table">
                 <thead>
