@@ -102,55 +102,64 @@ def signup():
 #Tabla de Puntuacion
 
 @api.route('/score', methods=['GET'])
-def get_scores():
-    last = request.args.get('last', default=False, type=bool)  # Obtén el parámetro 'last'
-
+def get_latest_scores():
+    """Obtener el puntaje más reciente registrado para cada usuario."""
     try:
-        if last:
-            # Si 'last' es True, devolver solo el último registro
-            last_score = Score.query.order_by(Score.id.desc()).first()  # Ordenar por ID descendente y tomar el primero
-            if not last_score:
-                return jsonify({"msg": "No hay puntuaciones registradas"}), 404
-            return jsonify(last_score.serialize()), 200
+        # Consulta para obtener el ID del puntaje más reciente por usuario
+        subquery = db.session.query(
+            Score.user_id,
+            db.func.max(Score.id).label('max_id')  # ID del puntaje más reciente
+        ).group_by(Score.user_id).subquery()
 
-        # Si no se pasa 'last', devolver todas las puntuaciones
-        scores = Score.query.order_by(Score.score.desc()).all()  # Ordenar por puntuación descendente
-        for index, score in enumerate(scores):
-            score.position = index + 1  # Actualiza la posición
-            db.session.commit()
+        # Obtener los registros completos del puntaje más reciente
+        recent_scores = db.session.query(Score).join(
+            subquery, Score.id == subquery.c.max_id
+        ).order_by(Score.score.desc()).all()  # Ordenar por puntuación descendente
 
-        return jsonify([score.serialize() for score in scores]), 200
+        # Serializar y agregar posición
+        result = []
+        for index, score in enumerate(recent_scores):
+            serialized_score = score.serialize()
+            serialized_score['position'] = index + 1
+            result.append(serialized_score)
+
+        return jsonify(result), 200
 
     except Exception as e:
         return jsonify({"msg": "Error al obtener puntuaciones", "error": str(e)}), 500
 
+
+
+
 @api.route('/score', methods=['POST'])
-def add_or_update_score():
+def add_score():
+    """Registrar un nuevo puntaje sin importar si es mayor o menor."""
     data = request.json
 
-    # Validar los datos de entrada
-    if not data.get('name') or not data.get('score') or not data.get('time'):
+   # Valida que todos los campos requeridos estén presentes.
+    required_fields = ['user_id', 'name', 'score', 'time', 'level']
+    if not all(field in data for field in required_fields):
         return jsonify({"msg": "Datos incompletos"}), 400
 
     try:
-        # Buscar si ya existe un registro de puntuación para este usuario
-        existing_score = Score.query.filter_by(user_id=data.get('user_id')).first()
+        #Verifica si ya existe un puntaje registrado para ese usuario.
+        existing_score = Score.query.filter_by(user_id=data['user_id']).first()
 
+        #Si el nuevo puntaje es mayor, actualiza el registro existente. Devuelve el puntaje actualizado.
         if existing_score:
-            # Si el nuevo puntaje es mayor, actualizamos el registro
             if data['score'] > existing_score.score:
-                existing_score.score = data['score']
                 existing_score.name = data['name']
+                existing_score.score = data['score']
                 existing_score.time = data['time']
                 existing_score.level = data['level']
                 db.session.commit()
                 return jsonify({"msg": "Puntuación actualizada", "score": existing_score.serialize()}), 200
             else:
                 return jsonify({"msg": "El puntaje no supera al existente"}), 200
-        else:
-            # Si no existe un registro previo, creamos uno nuevo
+            
+        else: #Si no hay puntaje previo, crea un nuevo registro.
             new_score = Score(
-                user_id=data.get('user_id'),
+                user_id=data['user_id'],
                 name=data['name'],
                 score=data['score'],
                 time=data['time'],
@@ -165,11 +174,9 @@ def add_or_update_score():
         return jsonify({"msg": "Error al guardar la puntuación", "error": str(e)}), 500
 
 
-
-
     
 #Private Pagina
-@api.route("/demo", methods=["GET"])
+@api.route("/demo", methods=["GET"])  
 @jwt_required()
 def demo():
     # Access the identity of the current user with get_jwt_identity

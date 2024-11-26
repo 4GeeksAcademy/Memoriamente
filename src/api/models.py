@@ -26,25 +26,18 @@ class User(db.Model):
     
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)  # Relación con el usuario
-    name = db.Column(db.String(120), nullable=False) 
-    time = db.Column(db.String(50), nullable=False)  
-    score = db.Column(db.Integer, nullable=False)  
-    level = db.Column(db.Integer, nullable=False)  
-    position = db.Column(db.Integer, nullable=True) 
-
-    user = db.relationship('User', backref='scores')  # Relación con el usuario
-
-    def __repr__(self):
-        return f'<Score {self.name}>'
+    user_id = db.Column(db.Integer, nullable=False, unique=True)  # Cada usuario debe ser único
+    name = db.Column(db.String(50), nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+    time = db.Column(db.String(50), nullable=False)  # Formato como 'MM:SS' o similar
+    level = db.Column(db.String(50), nullable=False)
 
     def serialize(self):
         return {
-            "id": self.id,
-            "user_id": self.user_id,
-            "name": self.name,
-            "time": self.time,
-            "score": self.score,
-            "level": self.level,
-            "position": self.position
+            'id': self.id,
+            'user_id': self.user_id,
+            'name': self.name,
+            'score': self.score,
+            'time': self.time,
+            'level': self.level,
         }

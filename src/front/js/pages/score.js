@@ -3,29 +3,31 @@ import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import "../../styles/score.css";
 
 export const Score = () => {
-    const [scores, setScores] = useState([]);
+    const [scores, setScores] = useState([]); // Estado para guardar las puntuaciones
     const navigate = useNavigate(); // Hook para redirigir
 
+    // Ejecutar al montar el componente
     useEffect(() => {
-        fetchScores();
+        fetchScores(); // Llamar a la función para obtener puntuaciones
     }, []);
 
     const fetchScores = async () => {
         try {
-            const response = await fetch(`${process.env.BACKEND_URL}api/score`); // <-- Usar el filtro 'last=true'
-            if (!response.ok) throw new Error("Error fetching scores");
+            // Llamada al backend para obtener todas las puntuaciones
+            const response = await fetch(`${process.env.BACKEND_URL}api/score`);
+            if (!response.ok) throw new Error("Error al obtener las puntuaciones");
+ 
             const data = await response.json();
-            setScores(data); // Actualizar el estado con el último registro (devuelto como objeto)
+            setScores(data); // Actualizar el estado con las puntuaciones recibidas
         } catch (error) {
-            console.error(error); 
+            console.error("Error al obtener las puntuaciones:", error);
         }
     };
-    
 
     return (
         <div className="score-container">
             <h1 className="score-title">🏆Tabla de Puntuaciones🏆</h1>
-                      
+
             <table className="score-table">
                 <thead>
                     <tr>
@@ -38,9 +40,9 @@ export const Score = () => {
                 </thead>
                 <tbody>
                     {scores.length > 0 ? (
-                        scores.map((player, index) => (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
+                        scores.map((player) => (
+                            <tr key={player.id}>
+                                <td>{player.position}</td>
                                 <td>{player.name}</td>
                                 <td>{player.score}</td>
                                 <td>{player.time}</td>
@@ -53,6 +55,7 @@ export const Score = () => {
                         </tr>
                     )}
                 </tbody>
+
             </table>
         </div>
     );

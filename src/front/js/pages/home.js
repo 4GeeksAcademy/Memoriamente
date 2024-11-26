@@ -42,14 +42,8 @@ export const Home = () => {
 					alt="Login Illustration"
 				/>
 			</div>
-
-
-
 			<div className="home-container text-center">
-				{/* Logo y navegación */}
-				
-
-
+							
 				{/* Título */}
 				<img
 					src={memoriamente}

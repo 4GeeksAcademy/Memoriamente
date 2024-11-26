@@ -56,7 +56,7 @@ export const Card = () => {
             // Crear los datos para enviar al servidor TABLA DE PUNTUACION
             const playerData = {
                 user_id: store.user_id || null, // Si el jugador está autenticado
-                name: store.user_name || "Anónimo",
+                name: store.user_name || localStorage.getItem("user_name"), 
                 score: store.score.current,
                 time: formatTime(store.time), // <-- Formatear tiempo aquí
                 level: store.level,
@@ -107,7 +107,7 @@ export const Card = () => {
     // Reemplaza el valor de tiempo en los datos de puntuación
     const playerData = {
         user_id: store.user_id || null, // Si el jugador está autenticado
-        name: store.user_name || "Anónimo",
+        name: store.user_name || localStorage.getItem("user_name"),
         score: store.score.current,
         time: formatTime(store.time), // Formatear tiempo como "h:m:s"
         level: store.level,

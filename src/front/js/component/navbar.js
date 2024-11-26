@@ -50,8 +50,8 @@ export const Navbar = () => {
                         </Link>
                     </div>
                 ) : (
-                    // Navbar estándar para otras vistas
-                    <div className="buttons-container">
+                    // Navbar estándar para otras vistas 
+                    <div className="buttons-container">   
                         <Link to="/login">
                             <button className="btn btn-success mx-2">Iniciar Sesión</button>
                         </Link>
