@@ -133,29 +133,35 @@ def get_latest_scores():
 
 
 @api.route('/score', methods=['POST'])
-def add_score():
-    """Registrar un nuevo puntaje sin importar si es mayor o menor."""
+def add_competitive_score():
+    """Registrar un nuevo puntaje competitivo, solo si es mayor que el puntaje actual."""
     data = request.json
 
-   # Valida que todos los campos requeridos estén presentes.
+    # Valida que todos los campos requeridos estén presentes.
     required_fields = ['user_id', 'name', 'score', 'time', 'level']
     if not all(field in data for field in required_fields):
         return jsonify({"msg": "Datos incompletos"}), 400
 
     try:
-        #Verifica si ya existe un puntaje registrado para ese usuario.
+        # Verifica si ya existe un puntaje registrado para ese usuario.
         existing_score = Score.query.filter_by(user_id=data['user_id']).first()
 
-        #Si el nuevo puntaje es mayor, actualiza el registro existente. Devuelve el puntaje actualizado.
+        # Si ya existe un puntaje registrado para el usuario:
         if existing_score:
-             existing_score.name = data['name']
-             existing_score.score = data['score']
-             existing_score.time = data['time']
-             existing_score.level = data['level']
-             db.session.commit()
-             return jsonify({"msg": "Puntuación actualizada", "score": existing_score.serialize()}), 200
-                   
-        else: #Si no hay puntaje previo, crea un nuevo registro.
+            # Si el nuevo puntaje es mayor, actualiza el puntaje.
+            if data['score'] > existing_score.score:
+                existing_score.name = data['name']
+                existing_score.score = data['score']
+                existing_score.time = data['time']
+                existing_score.level = data['level']
+                db.session.commit()
+                return jsonify({"msg": "Puntuación actualizada", "score": existing_score.serialize()}), 200
+            else:
+                # Si el nuevo puntaje no es mayor, no se actualiza y se notifica.
+                return jsonify({"msg": "El puntaje no supera al existente", "current_score": existing_score.serialize()}), 200
+        
+        else:
+            # Si no hay un puntaje previo para el usuario, se crea uno nuevo.
             new_score = Score(
                 user_id=data['user_id'],
                 name=data['name'],
@@ -168,8 +174,10 @@ def add_score():
             return jsonify({"msg": "Puntuación registrada", "score": new_score.serialize()}), 201
 
     except Exception as e:
+        # Si ocurre algún error en el proceso, se revierte la transacción y se responde con un mensaje de error.
         db.session.rollback()
         return jsonify({"msg": "Error al guardar la puntuación", "error": str(e)}), 500
+
 
 
     
