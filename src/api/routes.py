@@ -29,11 +29,59 @@ def users_list():
 
 # Obtener un usuario por ID
 @api.route("/users/<int:id>", methods=["GET"])
+@jwt_required()
 def get_user(id):
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    if user:
+        return jsonify({
+            "id": user.id,
+            "name": user.name,
+            "lastname": user.lastname,
+            "email": user.email,
+        }), 200
+    
+    return jsonify({"msg": "Usuario no encontrado"}), 404
     user = User.query.get(id)  # Obtener el usuario por su ID
     if user is None:  # Validar si existe
         return jsonify({"error": "User not found"}), 404  # Responder con un error 404 si no se encuentra
     return jsonify(user.serialize()), 200  # Responder con JSON serializado y código 200
+
+@api.route('/user', methods=['PUT'])
+@jwt_required()
+def edit_user():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    body = request.get_json()
+    user.name = body.get("name", user.name)
+    user.lastname = body.get("lastname", user.lastname)
+    user.email = body.get("email", user.email)
+
+    db.session.commit()
+    return jsonify({
+        "id": user.id,
+        "name": user.name,
+        "lastname": user.lastname,
+        "email": user.email,
+    }), 200
+
+@api.route('/user', methods=['DELETE'])
+@jwt_required()
+def delete_user():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"msg": "Usuario eliminado correctamente"}), 200
+
 
 # Registro de Iniciar Sesion
 
