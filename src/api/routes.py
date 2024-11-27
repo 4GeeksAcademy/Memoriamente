@@ -19,14 +19,6 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
 
 # Traer todos los usuarios
 @api.route("/users", methods=["GET"])
@@ -69,6 +61,7 @@ def login():
         "user_name": user.name,  # <-- Incluye el nombre del usuario
         "user_id": user.id
     }), 200
+
 
 # Registrar jugador
 @api.route("/signup", methods=["POST"])
@@ -128,8 +121,6 @@ def get_latest_scores():
 
     except Exception as e:
         return jsonify({"msg": "Error al obtener puntuaciones", "error": str(e)}), 500
-
-
 
 
 @api.route('/score', methods=['POST'])

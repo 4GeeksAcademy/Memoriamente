@@ -91,3 +91,22 @@
     max-width: 500px; /* Ajusta el ancho de la imagen */ 
   
 }
+
+.auth-form .boton-eliminar {
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 10px; /* Separación entre botones */
+}
+
+.auth-form .boton-eliminar:hover {
+    background-color: #cc0000;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #ff0000;
+}
+

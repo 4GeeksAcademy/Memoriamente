@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import "../../styles/score.css";
 
+
 export const Score = () => {
     const [scores, setScores] = useState([]); // Estado para guardar las puntuaciones
     const navigate = useNavigate(); // Hook para redirigir

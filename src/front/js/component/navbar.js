@@ -48,6 +48,9 @@ export const Navbar = () => {
                         <Link to="/" onClick={() => actions.logout()}>
                             <button className="btn btn-danger mx-2">Cerrar Sesión</button>
                         </Link>
+                        <Link to="/profile">
+                            <button className="btn btn-danger mx-2">Editar Usuario</button>
+                        </Link>
                     </div>
                 ) : (
                     // Navbar estándar para otras vistas 

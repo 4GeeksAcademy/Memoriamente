@@ -10,6 +10,7 @@ import Login from "./pages/login";
 import Signup from "./pages/signup";
 import { Score } from "./pages/score";
 import injectContext from "./store/appContext";
+import UserProfile from "./pages/userProfile"; // Importa la página de perfil
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -44,6 +45,7 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<ResetPassword />} path="/reset-password" />
                         <Route element={<Score />} path="/Score" />
+                        <Route element={<UserProfile />} path="/profile" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

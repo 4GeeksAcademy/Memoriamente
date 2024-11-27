@@ -14,7 +14,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             level: 1,  // Nivel inicial
             user_name: null,
             user_id: null,
-            auth: false
+            auth: false,
+            user: null
         },
 
         actions: {
@@ -414,6 +415,69 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return { success: false, msg: "Hubo un error al enviar el correo." };
                 }
             },
+
+           
+
+            // Obtener datos del usuario logueado
+            getUserData: async () => {
+                try {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(process.env.BACKEND_URL + "/api/users/<int:id>", {
+                        method: "GET",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    if (!response.ok) throw new Error("Error al obtener datos del usuario");
+                    const data = await response.json();
+                    setStore({ user: data });
+                    return data;
+                } catch (error) {
+                    console.error(error);
+                    return null;
+                }
+            },
+
+            // Editar datos del usuario
+            editUser: async (updatedData) => {
+                try {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(process.env.BACKEND_URL + "/api/user", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify(updatedData),
+                    });
+                    if (!response.ok) throw new Error("Error al editar datos del usuario");
+                    const data = await response.json();
+                    setStore({ user: data });
+                    return true;
+                } catch (error) {
+                    console.error(error);
+                    return false;
+                }
+            },
+
+            // Eliminar usuario
+            deleteUser: async (userId) => {
+                try {
+                    const token = localStorage.getItem("token");
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/user`, {
+                        method: "DELETE",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    if (!response.ok) throw new Error("Error al eliminar el usuario");
+                    return true;
+                } catch (error) {
+                    console.error(error);
+                    return false;
+                }
+            },
+            
 
         }
     };
