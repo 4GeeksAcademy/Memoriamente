@@ -12,7 +12,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             timerInterval: null,     // Intervalo para manejar el temporizador
             timerRunning: false,     // Estado del temporizador (si está corriendo o detenido)
             level: 1,  // Nivel inicial
-
+            user_name: null,
+            user_id: null,
             auth: false
         },
 
@@ -288,6 +289,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                     // Guarda el nombre del usuario en localStorage
                     localStorage.setItem("user_name", data.user_name); // <-- Aquí guardamos el nombre del usuario
+                    localStorage.setItem("user_id", data.user_id); // <-- Aquí guardamos el nombre del usuario
+
 
                     // Reinicia el juego al estado inicial (nivel 1, puntuación 0, etc.)
                     setStore({
@@ -300,6 +303,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         time: 0,
                         timerInterval: null,
                         timerRunning: false,
+                       
                     });
 
                     return true; // Login exitoso

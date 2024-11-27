@@ -66,7 +66,8 @@ def login():
     return jsonify({
         "access_token": access_token,
         "msg": "Login exitoso",
-        "user_name": user.name  # <-- Incluye el nombre del usuario
+        "user_name": user.name,  # <-- Incluye el nombre del usuario
+        "user_id": user.id
     }), 200
 
 # Registrar jugador
@@ -147,16 +148,13 @@ def add_score():
 
         #Si el nuevo puntaje es mayor, actualiza el registro existente. Devuelve el puntaje actualizado.
         if existing_score:
-            if data['score'] > existing_score.score:
-                existing_score.name = data['name']
-                existing_score.score = data['score']
-                existing_score.time = data['time']
-                existing_score.level = data['level']
-                db.session.commit()
-                return jsonify({"msg": "Puntuación actualizada", "score": existing_score.serialize()}), 200
-            else:
-                return jsonify({"msg": "El puntaje no supera al existente"}), 200
-            
+             existing_score.name = data['name']
+             existing_score.score = data['score']
+             existing_score.time = data['time']
+             existing_score.level = data['level']
+             db.session.commit()
+             return jsonify({"msg": "Puntuación actualizada", "score": existing_score.serialize()}), 200
+                   
         else: #Si no hay puntaje previo, crea un nuevo registro.
             new_score = Score(
                 user_id=data['user_id'],

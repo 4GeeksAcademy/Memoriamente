@@ -46,6 +46,10 @@ export const Card = () => {
         }
     }, [selected]);
 
+    useEffect(
+        ()=>{console.log(store.user_id)},[store.user_id]
+    )
+
     // useEffect que detecta cuando todas las cartas se han abierto
     useEffect(() => {
         if (opened.length === store.images.length && store.images.length > 0) {
@@ -55,7 +59,7 @@ export const Card = () => {
 
             // Crear los datos para enviar al servidor TABLA DE PUNTUACION
             const playerData = {
-                user_id: store.user_id || null, // Si el jugador está autenticado
+                user_id: localStorage.getItem("user_id"), // Si el jugador está autenticado
                 name: store.user_name || localStorage.getItem("user_name"), 
                 score: store.score.current,
                 time: formatTime(store.time), // <-- Formatear tiempo aquí

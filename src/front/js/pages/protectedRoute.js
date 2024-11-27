@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }) => {
         };
 
         verifyAuth();
-    }, [store.auth, actions, navigate]);
+    }, [store.auth]);
 
     return store.auth ? children : null;
 };
