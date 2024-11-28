@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
-import "../../styles/auth.css"; // Importar los mismos estilos
+import "../../styles/auth.css"; 
 
 const UserProfile = () => {
     const { store, actions } = useContext(Context);
@@ -15,7 +15,7 @@ const UserProfile = () => {
 
         const fetchUserData = async () => {
             try {
-                const storedUser = await actions.getUserData(); // Obtener datos del usuario
+                const storedUser = await actions.getUserData(localStorage.getItem("user_id")); // Obtener datos del usuario
                 if (isMounted && storedUser) {
                     setUser(storedUser); // Actualizar el estado una sola vez
                 }
@@ -29,19 +29,21 @@ const UserProfile = () => {
         return () => {
             isMounted = false; // Cleanup
         };
-    }, [actions]);
+    }, []);
 
     const handleEdit = async (e) => {
         e.preventDefault();
-        const success = await actions.editUser(user);
+        const { email, ...editableFields } = user; // Excluye el correo electrónico
+        const success = await actions.editUser(editableFields); // Enviar solo los campos editables
         if (success) {
             alert("Tu información ha sido actualizada.");
-            actions.logout(); // Cierra sesión después de eliminar
+            actions.logout();
             window.location.href = "/"; // Redirige a la página de inicio
         } else {
             alert("Ocurrió un error al actualizar tu información.");
         }
     };
+    
 
     const handleDelete = async () => {
         if (window.confirm("¿Estás seguro de que deseas eliminar tu cuenta?")) {
@@ -90,7 +92,7 @@ const UserProfile = () => {
                         type="email"
                         className="form-control"
                         value={user.email || ""} // Asegura que no sea undefined
-                        onChange={(e) => setUser({ ...user, email: e.target.value })} // Actualiza el estado
+                        readOnly // Hace el campo no editable
                         placeholder="name@example.com"
                         required
                     />

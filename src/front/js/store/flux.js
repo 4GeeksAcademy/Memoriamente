@@ -419,12 +419,13 @@ const getState = ({ getStore, getActions, setStore }) => {
            
 
             // Obtener datos del usuario logueado
-            getUserData: async () => {
+            getUserData: async (id) => {
                 try {
                     const token = localStorage.getItem("token");
-                    const response = await fetch(process.env.BACKEND_URL + "/users/<int:id>", {
+                    const response = await fetch(process.env.BACKEND_URL + `api/users/${id}`, {
                         method: "GET",
                         headers: {
+                            'Content-Type': 'application/json',
                             Authorization: `Bearer ${token}`,
                         },
                     });
@@ -442,7 +443,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             editUser: async (updatedData) => {
                 try {
                     const token = localStorage.getItem("token");
-                    const response = await fetch(process.env.BACKEND_URL + "/api/user", {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/user`, {
                         method: "PUT",
                         headers: {
                             "Content-Type": "application/json",

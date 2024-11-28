@@ -31,17 +31,7 @@ def users_list():
 @api.route("/users/<int:id>", methods=["GET"])
 @jwt_required()
 def get_user(id):
-    user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    if user:
-        return jsonify({
-            "id": user.id,
-            "name": user.name,
-            "lastname": user.lastname,
-            "email": user.email,
-        }), 200
-    
-    return jsonify({"msg": "Usuario no encontrado"}), 404
+   
     user = User.query.get(id)  # Obtener el usuario por su ID
     if user is None:  # Validar si existe
         return jsonify({"error": "User not found"}), 404  # Responder con un error 404 si no se encuentra
@@ -59,7 +49,8 @@ def edit_user():
     body = request.get_json()
     user.name = body.get("name", user.name)
     user.lastname = body.get("lastname", user.lastname)
-    user.email = body.get("email", user.email)
+    # El correo electrónico NO se actualiza
+    #user.email = body.get("email", user.email)
 
     db.session.commit()
     return jsonify({
@@ -106,7 +97,7 @@ def login():
     return jsonify({
         "access_token": access_token,
         "msg": "Login exitoso",
-        "user_name": user.name,  # <-- Incluye el nombre del usuario
+        "user_name": user.name,  
         "user_id": user.id
     }), 200
 
