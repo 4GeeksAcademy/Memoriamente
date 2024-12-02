@@ -5,11 +5,19 @@ import { BackendURL } from "./component/backendURL";
 
 import { Home } from "./pages/home";
 import { Demo } from "./pages/demo";
-import { Single } from "./pages/single";
+import { Card } from "./pages/card";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import { Score } from "./pages/score";
 import injectContext from "./store/appContext";
+import UserProfile from "./pages/userProfile"; // Importa la página de perfil
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
+import  ProtectedRoute  from "./pages/protectedRoute";  
+import ResetPassword from "./pages/resetPassword";
+
+
 
 //create your first component
 const Layout = () => {
@@ -17,18 +25,27 @@ const Layout = () => {
     // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
+
+    
 
     return (
-        <div>
+        <div>  
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
                     <Routes>
                         <Route element={<Home />} path="/" />
-                        <Route element={<Demo />} path="/demo" />
-                        <Route element={<Single />} path="/single/:theid" />
+                        <Route element={<ProtectedRoute>
+                            <Demo />
+                        </ProtectedRoute>} path="/demo" />
+                        <Route element={<Card />} path="/card/:theid" />
                         <Route element={<h1>Not found!</h1>} />
+                        <Route element={<Login />} path="/login" />
+                        <Route element={<Signup />} path="/signup" />
+                        <Route element={<ResetPassword />} path="/reset-password" />
+                        <Route element={<Score />} path="/Score" />
+                        <Route element={<UserProfile />} path="/profile" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

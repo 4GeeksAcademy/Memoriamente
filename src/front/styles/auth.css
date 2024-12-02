@@ -1,0 +1,112 @@
+/* auth.css */
+
+.auth-container {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 500px;
+    background: radial-gradient(circle, #0a0f0d, #002400, #000000);
+    border: 3px solid #00ff00;
+    border-radius: 10px;
+    color: #ffffff;
+    box-shadow: 0 0 15px #00ff00;
+    font-family: 'Orbitron', Arial, sans-serif;
+    flex: 1; /* Hace que el formulario ocupe el espacio restante */
+    margin-left: auto ;
+}
+
+.auth-title {
+    text-align: center;
+    color: #00ff00;
+    font-size: 2rem;
+    text-shadow: 0 0 10px #00ff00;
+    margin-bottom: 20px;
+}
+
+.auth-form .form-label {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+.auth-form .form-control {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #00ff00;
+    color: #ffffff;
+    box-shadow: 0 0 5px #00ff00;
+}
+
+.auth-form .form-control:focus {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: #00ff00;
+    box-shadow: 0 0 10px #00ff00;
+}
+
+.auth-form .boton {
+    background-color: #00ff00;
+    color: #000000;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    
+}
+
+.auth-form .boton:hover {
+    background-color: #00cc00;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #00ff00;
+   
+}
+
+.auth-form .btn-primary {
+    background-color: #00ccff;
+    border: none;
+    font-weight: bold;
+    color: #000000;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 20px; 
+}
+
+.auth-form .btn-primary:hover {
+    background-color: #0099cc;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #00ccff;
+}
+
+.auth-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px; /* Espacio entre la imagen y el formulario */
+    margin: 20px;
+    padding: 50px;
+    max-width: 1000px; /* Ancho máximo del layout */
+    margin-left: 100px;
+    
+}
+
+/* Estilo para la imagen */
+.auth-image img {
+    max-width: 500px; /* Ajusta el ancho de la imagen */ 
+  
+}
+
+.auth-form .boton-eliminar {
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 10px; /* Separación entre botones */
+}
+
+.auth-form .boton-eliminar:hover {
+    background-color: #cc0000;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #ff0000;
+}
+
